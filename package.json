@@ -1,0 +1,26 @@
+{
+  "name": "angularjs-todo-app",
+  "version": "1.0.0",
+  "description": "## Setting up an AngularJS App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scriptjumper/angularjs-todo-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scriptjumper/angularjs-todo-app/issues"
+  },
+  "homepage": "https://github.com/scriptjumper/angularjs-todo-app#readme",
+  "dependencies": {
+    "@uirouter/angularjs": "^1.0.25",
+    "angular": "^1.7.9",
+    "bootstrap": "^4.4.1",
+    "prettier": "^2.0.2"
+  }
+}
