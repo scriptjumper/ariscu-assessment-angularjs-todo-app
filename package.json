@@ -4,7 +4,7 @@
   "description": "## Setting up an AngularJS App",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "lite-server"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,8 @@
     "angular": "^1.7.9",
     "bootstrap": "^4.4.1",
     "prettier": "^2.0.2"
+  },
+  "devDependencies": {
+    "lite-server": "^2.5.4"
   }
 }

@@ -133,3 +133,27 @@ In the main directory create `index.html` and add the code below:
   </body>
 </html>
 ```
+
+To test that all our imports is working we need to run our app.
+For this app I am using <a href="https://www.npmjs.com/package/lite-server" target="_blank">lite-server</a>, to install `lite-server` we run this command:
+
+```
+$ npm install lite-server --save-dev
+```
+
+...and add a "script" entry within your project's `package.json` file:
+
+```
+# Inside package.json...
+"scripts": {
+    "dev": "lite-server"
+},
+```
+
+With the above script entry, you can then start lite-server via:
+
+```
+$ npm run dev
+```
+
+Once the above command is running, in your browser of choice go to `http://localhost:3000` (by default `lite-server` will open a new tab in your default browser that is opened to `http://localhost:3000`).
