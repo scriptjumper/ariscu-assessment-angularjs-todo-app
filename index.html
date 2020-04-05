@@ -6,9 +6,14 @@
     <title>Todo App</title>
 
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
+    <base href="/" />
   </head>
   <body>
-    <h1>Hello World!</h1>
+    <div ng-app="TodoApp">
+      <div class="container">
+        <div ng-view></div>
+      </div>
+    </div>
 
     <!-- Libs -->
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
@@ -16,10 +21,13 @@
     <script src="node_modules/angular-route/angular-route.js"></script>
     <script src="app/js/code.angularjs.org/1.2.13/angular-cookies.js"></script>
 
+    <script src="app/app.js"></script>
+
     <!-- Services -->
 
     <!-- Directives -->
 
     <!-- Controllers -->
+    <script src="app/controllers/TaskCtrl.js"></script>
   </body>
 </html>

@@ -174,3 +174,60 @@ $ npm run dev
 ```
 
 Once the above command is running, in your browser of choice go to `http://localhost:3000` (by default `lite-server` will open a new tab in your default browser that is opened to `http://localhost:3000`).
+
+## Creating First View and Controller
+
+### Setting Up First Route
+
+In the `app/` directory, we will be creating `app.js` file with the code below:
+
+```
+;(function () {
+  angular.module('TodoApp', ['ngRoute', 'ngCookies']).config([
+    '$routeProvider',
+    '$locationProvider',
+    function ($routeProvider, $locationProvider) {
+      $routeProvider
+        .when('/', {
+          controller: 'TaskCtrl',
+          templateUrl: 'views/tasks.html'
+        })
+        .otherwise({ redirectTo: '/' })
+
+      //
+      $locationProvider.hashPrefix('')
+      $locationProvider.html5Mode(true)
+    }
+  ])
+})()
+```
+
+Next, we create a view and controller file for out route.
+
+In the `app/controllers` directory, we will be creating `TaskCtrl.js` file with the code below:
+
+```
+;(function () {
+  angular.module('TodoApp').controller('TaskCtrl', [function () {}])
+})()
+```
+
+Then, In the `views/` directory, we will be creating `tasks.html` file with some placeholder code:
+
+```
+<h1>Hello Form tasks.html</h1>
+```
+
+Finally we change the `body` in our `index.html` file to start using AngularJS.
+We do this with the code below:
+
+```
+<body>
+  <div ng-app="TodoApp">
+    <div class="container">
+      <div ng-view></div>
+    </div>
+  </div>
+
+...
+```
