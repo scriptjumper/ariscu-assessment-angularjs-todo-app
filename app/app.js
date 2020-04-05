@@ -12,6 +12,10 @@
           controller: 'AuthCtrl',
           templateUrl: 'views/auth.html'
         })
+        .when('/register', {
+          controller: 'AuthCtrl',
+          templateUrl: 'views/auth.html'
+        })
         .otherwise({ redirectTo: '/login' })
 
       // removing #! from url
