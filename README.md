@@ -26,15 +26,32 @@ Now we can install the packages we need to setup the AngularJS app.
 
 We will be using the following packages:
 
-- <a href="https://www.npmjs.com/package/angular" target="_blank">angular</a>
-- <a href="https://www.npmjs.com/package/@uirouter/angularjs" target="_blank">@uirouter/angularjs</a>
-- <a href="https://www.npmjs.com/package/bootstrap" target="_blank">bootstrap</a>
-- <a href="https://www.npmjs.com/package/prettier" target="_blank">prettier</a>
+- angular
+- angular-route
+- bootstrap
+- prettier
+- angular-cookies
+- jQuery
 
-We install these packages by running this command:
+Update the dependencies in the `package.json` with the following code:
 
 ```
-$ npm i --save angular @uirouter/angularjs bootstrap prettier
+...
+
+"dependencies": {
+    "angular-route": "^1.2.32",
+    "bootstrap": "^4.4.1",
+    "jquery": "^2.2.4",
+    "prettier": "^2.0.2"
+  },
+
+...
+```
+
+then we running the command below:
+
+```
+$ npm i && npm ci
 ```
 
 Once that’s done installing, let’s run the command below to create files for our `prettier` package and a `gitignore` file to handle files we do not want to add to github:

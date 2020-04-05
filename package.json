@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/scriptjumper/angularjs-todo-app#readme",
   "dependencies": {
-    "@uirouter/angularjs": "^1.0.25",
-    "angular": "^1.7.9",
+    "angular-route": "^1.2.32",
     "bootstrap": "^4.4.1",
+    "jquery": "^3.4.1",
     "prettier": "^2.0.2"
   },
   "devDependencies": {
