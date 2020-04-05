@@ -8,6 +8,10 @@
           controller: 'TaskCtrl',
           templateUrl: 'views/tasks.html'
         })
+        .when('/login', {
+          controller: 'AuthCtrl',
+          templateUrl: 'views/auth.html'
+        })
         .otherwise({ redirectTo: '/' })
 
       //
