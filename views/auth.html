@@ -1,1 +1,29 @@
-<h1>Login form</h1>
+<div class="container">
+  <div class="col-md-6 mx-auto text-center">
+    <div class="header-title">
+      <h1 class="wv-heading--title">
+        Check out — it’s free!
+      </h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <div class="myform form">
+        <form name="form" ng-submit="submitForm()" role="form">
+          <div class="form-group">
+            <input type="email" name="email" id="email" class="form-control" ng-model="email" placeholder="Email" required />
+          </div>
+          <div class="form-group">
+            <input type="password" name="password" id="password" class="form-control" ng-model="password" placeholder="Password" required />
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-block send-button tx-tfm">Login</button>
+          </div>
+
+          <p class="small mt-3">Are you new? why don't you create an account <a href="#" class="ps-hero__content__link">here</a>.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
