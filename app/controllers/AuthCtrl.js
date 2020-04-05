@@ -2,7 +2,8 @@
   angular.module('TodoApp').controller('AuthCtrl', [
     '$scope',
     '$location',
-    function ($scope, $location) {
+    'AuthenticationService',
+    function ($scope, $location, AuthenticationService) {
       // templating the text to display for both the login and register form
       var loginFormDetails = {
           formMessage: "Are you new? why don't you create an account ",
@@ -17,12 +18,24 @@
 
       $scope.submit = function () {
         $scope.dataLoading = true
-        if ($scope.showLoginForm) {
-          console.log('Handle User login')
-          $scope.dataLoading = false
+        if (!$scope.showRegisterFields) {
+          AuthenticationService.Login($scope.email, $scope.password, function (response) {
+            if (response.success) {
+              $location.path('/')
+            } else {
+              $scope.error = response.message
+              $scope.dataLoading = false
+            }
+          })
         } else {
-          console.log('Handle User registration')
-          $scope.dataLoading = false
+          AuthenticationService.Register($scope.firstName, $scope.lastName, $scope.email, $scope.password, function (response) {
+            if (response.success) {
+              $location.path('/')
+            } else {
+              $scope.error = response.message
+              $scope.dataLoading = false
+            }
+          })
         }
       }
 
