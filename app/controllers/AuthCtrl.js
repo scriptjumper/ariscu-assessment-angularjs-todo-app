@@ -3,7 +3,17 @@
     '$scope',
     '$location',
     function ($scope, $location) {
-      constructor()
+      // templating the text to display for both the login and register form
+      var loginFormDetails = {
+          formMessage: "Are you new? why don't you create an account ",
+          formLink: '/register',
+          formBtnName: 'Login'
+        },
+        registerFormDetails = {
+          formMessage: 'Already have an account? just login ',
+          formLink: '/login',
+          formBtnName: 'Register'
+        }
 
       $scope.submit = function () {
         $scope.dataLoading = true
@@ -16,18 +26,16 @@
         }
       }
 
+      constructor()
+
       function constructor() {
         // check path to see which form to display
-        $scope.showLoginForm = true
-        $scope.formMessage = "Are you new? why don't you create an account "
-        $scope.formLink = '/register'
-        $scope.formBtnName = 'Login'
+        $scope.showRegisterFields = false
+        $scope.formDetails = loginFormDetails
         var path = $location.path()
         if (path === '/register') {
-          $scope.showLoginForm = false
-          $scope.formMessage = 'Already have an account? just login '
-          $scope.formLink = '/login'
-          $scope.formBtnName = 'Register'
+          $scope.showRegisterFields = true
+          $scope.formDetails = registerFormDetails
         }
       }
     }
