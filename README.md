@@ -104,3 +104,32 @@ jspm_packages
 ```
 
 For the code I use in my `.gitignore` file I get the code from <a href="https://github.com/executeautomation/gitignore" target="_blank">executeautomation</a>.
+
+## Starting our app
+
+Let’s first create our main file:
+
+`index.html`, which will be linked to our external files and will serve as the primary template for our application.
+
+In the main directory create `index.html` and add the code below:
+
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
+
+  </head>
+  <body>
+    <h1>Hello World!</h1>
+
+    <!-- Libs -->
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/@uirouter/angularjs/release/angular-ui-router.js"></script>
+  </body>
+</html>
+```
