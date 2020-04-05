@@ -12,9 +12,9 @@
           controller: 'AuthCtrl',
           templateUrl: 'views/auth.html'
         })
-        .otherwise({ redirectTo: '/' })
+        .otherwise({ redirectTo: '/login' })
 
-      //
+      // removing #! from url
       $locationProvider.hashPrefix('')
       $locationProvider.html5Mode(true)
     }
