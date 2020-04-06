@@ -30,7 +30,7 @@
         } else {
           AuthenticationService.Register($scope.userFormDetails, function (response) {
             if (response.success) {
-              $location.path('/login')
+              $location.path('/')
               $scope.success = response.message
             } else {
               $scope.error = response.message
