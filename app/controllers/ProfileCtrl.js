@@ -2,17 +2,40 @@
   angular.module('TodoApp').controller('ProfileCtrl', [
     '$scope',
     '$location',
-    function ($scope, $location) {
+    '$window',
+    'AuthenticationService',
+    function ($scope, $location, $window, AuthenticationService) {
       var path = $location.path()
       if (path === '/login' || path === '/register') {
         $scope.showNavbar = false
       } else {
         $scope.showNavbar = true
       }
+      $scope.userDetails = {}
 
       $scope.handleLogout = function () {
-        console.log('handleLogout() was clicked..')
+        $window.localStorage.clear()
+        $window.sessionStorage.clear()
+        $location.path('/')
+        $window.location.reload()
       }
+
+      $scope.handleUserUpdate = function () {
+        console.log($scope.userDetails)
+      }
+
+      function getUserDetails() {
+        AuthenticationService.getUserDetails(function (response) {
+          if (response.success) {
+            $scope.userDetails = response.data
+          } else {
+            // TODO: need to add better error handling below
+            $scope.error = response.message
+          }
+        })
+      }
+
+      getUserDetails()
     }
   ])
 })()
