@@ -65,6 +65,10 @@
           .error(onError)
       }
 
+      service.SetCredentials = function (authdata) {
+        localStorage.setItem('isAuthenticated', JSON.stringify(authdata))
+      }
+
       return service
     }
   ])

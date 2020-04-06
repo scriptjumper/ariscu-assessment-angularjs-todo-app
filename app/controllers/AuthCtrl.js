@@ -21,6 +21,7 @@
         if (!$scope.showRegisterFields) {
           AuthenticationService.Login($scope.userFormDetails, function (response) {
             if (response.success) {
+              AuthenticationService.SetCredentials(response.data)
               $location.path('/')
             } else {
               $scope.error = response.message
@@ -30,8 +31,8 @@
         } else {
           AuthenticationService.Register($scope.userFormDetails, function (response) {
             if (response.success) {
+              AuthenticationService.SetCredentials(response.data)
               $location.path('/')
-              $scope.success = response.message
             } else {
               $scope.error = response.message
               $scope.dataLoading = false
