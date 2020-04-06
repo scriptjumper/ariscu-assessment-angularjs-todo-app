@@ -2,7 +2,8 @@
   angular.module('TodoApp').controller('TaskCtrl', [
     '$scope',
     '$routeParams',
-    function ($scope, $routeParams) {
+    'TodoTaskService',
+    function ($scope, $routeParams, TodoTaskService) {
       /**
        * changing heading on todo task form depending on $routeParams.id
        * New todo tasks wont have an id as yet
