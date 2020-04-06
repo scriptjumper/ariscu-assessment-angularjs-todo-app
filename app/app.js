@@ -18,6 +18,14 @@
             controller: 'AuthCtrl',
             templateUrl: 'views/auth.html'
           })
+          .when('/tasks/new', {
+            controller: 'TaskCtrl',
+            templateUrl: 'views/shared/todoTaskForm.html'
+          })
+          .when('/tasks/edit/:id', {
+            controller: 'TaskCtrl',
+            templateUrl: 'views/shared/todoTaskForm.html'
+          })
           .otherwise({ redirectTo: '/' })
       }
     ])
