@@ -26,13 +26,36 @@
         }
       ]
 
-      service.FetchAllTodoTasks = function () {}
+      service.FetchAllTodoTasks = function () {
+        /**
+         * TODO:
+         * Fetch all todo tasks for current user
+         * store data in session storage
+         */
+      }
 
       service.SaveTodoTask = function (data) {}
 
       service.UpdateTodoTask = function (data) {}
 
       service.DeleteTodoTask = function (data) {}
+
+      service.getById = function (id) {
+        /**
+         * TODO:
+         * going to fetch todo tasks from session storage
+         */
+        var todoTask = {}
+
+        service.todoTasks.forEach((todoTaskObj) => {
+          if (todoTaskObj.id == id) {
+            todoTask = todoTaskObj
+            return
+          }
+        })
+
+        return todoTask
+      }
 
       return service
     }

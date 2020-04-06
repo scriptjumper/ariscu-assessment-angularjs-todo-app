@@ -23,7 +23,7 @@
           </span>
           <span>{{todoTask.title}}</span>
           <span class="float-right">
-            <a href="#/tasks/edit/" class="btn btn-primary"><span class="fa fa-pencil"></span></a>
+            <a href="#/tasks/edit/{{todoTask.id}}" class="btn btn-primary"><span class="fa fa-pencil"></span></a>
             <button type="button" class="btn btn-danger" ng-click="handleTaskDeletion()">
               <span class="fa fa-trash"> </span>
             </button>
