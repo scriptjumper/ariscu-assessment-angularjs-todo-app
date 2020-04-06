@@ -17,24 +17,11 @@
   <div class="col-md-12 mt-md-2">
     <ul class="list-group">
       <ul class="list-group list-group-flush">
-        <li class="list-group-item text-center">
+        <li ng-repeat="todoTask in todoTasks" class="list-group-item text-center">
           <span class="float-left">
             <button type="button" class="btn btn-success" disabled><span class="fa fa-check"> </span></button>
           </span>
-          <span>My first todo task</span>
-          <span class="float-right">
-            <a href="#/tasks/edit/" class="btn btn-primary"><span class="fa fa-pencil"></span></a>
-            <button type="button" class="btn btn-danger" ng-click="handleTaskDeletion()">
-              <span class="fa fa-trash"> </span>
-            </button>
-          </span>
-        </li>
-
-        <li class="list-group-item text-center">
-          <span class="float-left">
-            <button type="button" class="btn btn-success" disabled><span class="fa fa-check"> </span></button>
-          </span>
-          <span>My second todo task</span>
+          <span>{{todoTask.title}}</span>
           <span class="float-right">
             <a href="#/tasks/edit/" class="btn btn-primary"><span class="fa fa-pencil"></span></a>
             <button type="button" class="btn btn-danger" ng-click="handleTaskDeletion()">
