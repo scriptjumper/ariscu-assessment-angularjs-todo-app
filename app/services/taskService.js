@@ -4,34 +4,36 @@
     '$cookieStore',
     '$rootScope',
     '$timeout',
-    function ($http, $cookieStore, $rootScope, $timeout) {
+    'baseUrl',
+    function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
       var service = {}
 
-      service.todoTasks = [
-        {
-          id: 1,
-          title: 'Eating'
-        },
-        {
-          id: 2,
-          title: 'Code'
-        },
-        {
-          id: 3,
-          title: 'Sleep'
-        },
-        {
-          id: 4,
-          title: 'Repeat'
-        }
-      ]
+      service.FetchAllTodoTasks = function (callback) {
+        var authentication = service.getAuthenticationHeaders(),
+          res = {}
 
-      service.FetchAllTodoTasks = function () {
-        /**
-         * TODO:
-         * Fetch all todo tasks for current user
-         * store data in session storage
-         */
+        var req = {
+          method: 'GET',
+          url: baseUrl + '/tasks',
+          headers: {
+            Authorization: `${authentication.token_type} ${authentication.access_token}`
+          }
+        }
+
+        $http(req).then(
+          function (response) {
+            if (response.status === 200) {
+              res.success = true
+              res.data = response.data.data || []
+            }
+
+            sessionStorage.setItem('todoTasks', JSON.stringify(res.data))
+            return callback(res)
+          },
+          function (response) {
+            callback(response)
+          }
+        )
       }
 
       service.SaveTodoTask = function (data) {}
@@ -40,14 +42,11 @@
 
       service.DeleteTodoTask = function (data) {}
 
-      service.getById = function (id) {
-        /**
-         * TODO:
-         * going to fetch todo tasks from session storage
-         */
-        var todoTask = {}
+      service.getTodoTaskById = function (id) {
+        var todoTasks = JSON.parse(sessionStorage.getItem('todoTasks')) || [],
+          todoTask = {}
 
-        service.todoTasks.forEach((todoTaskObj) => {
+        todoTasks.forEach((todoTaskObj) => {
           if (todoTaskObj.id == id) {
             todoTask = todoTaskObj
             return
@@ -55,6 +54,13 @@
         })
 
         return todoTask
+      }
+
+      service.getAuthenticationHeaders = function () {
+        // get users authentication from localstorage
+        var authentication = JSON.parse(localStorage.getItem('isAuthenticated'))
+
+        return authentication
       }
 
       return service
