@@ -29,5 +29,46 @@
           .otherwise({ redirectTo: '/' })
       }
     ])
+    .run([
+      '$rootScope',
+      '$location',
+      '$cookieStore',
+      '$http',
+      function ($rootScope, $location, $cookieStore, $http) {
+        $rootScope.$on('$locationChangeStart', function (event, next, current) {
+          /**
+           * ! For production
+           * make use of a authenticate method in the backend
+           */
+          var path = $location.path()
+          var userIsAuthenticated = localStorage.getItem('isAuthenticated') || false
+
+          switch (path) {
+            case '/':
+              if (!userIsAuthenticated) {
+                $location.path('/login')
+              }
+              break
+            case '/tasks/new':
+              if (!userIsAuthenticated) {
+                $location.path('/login')
+              }
+              break
+            case '/login':
+              if (userIsAuthenticated) {
+                $location.path('/')
+              }
+              break
+            case '/register':
+              if (userIsAuthenticated) {
+                $location.path('/')
+              }
+              break
+            default:
+              break
+          }
+        })
+      }
+    ])
     .constant('baseUrl', 'http://localhost:8000/api')
 })()
