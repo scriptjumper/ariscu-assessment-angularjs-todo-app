@@ -19,23 +19,11 @@
       $scope.submit = function () {
         $scope.dataLoading = true
         if (!$scope.showRegisterFields) {
-          AuthenticationService.Login($scope.email, $scope.password, function (response) {
-            if (response.success) {
-              $location.path('/')
-            } else {
-              $scope.error = response.message
-              $scope.dataLoading = false
-            }
-          })
+          // handle login
+          $scope.dataLoading = false
         } else {
-          AuthenticationService.Register($scope.firstName, $scope.lastName, $scope.email, $scope.password, function (response) {
-            if (response.success) {
-              $location.path('/')
-            } else {
-              $scope.error = response.message
-              $scope.dataLoading = false
-            }
-          })
+          // handle register
+          $scope.dataLoading = false
         }
       }
 
@@ -50,6 +38,7 @@
           $scope.showRegisterFields = true
           $scope.formDetails = registerFormDetails
         }
+        $scope.userFormDetails = {}
       }
     }
   ])
