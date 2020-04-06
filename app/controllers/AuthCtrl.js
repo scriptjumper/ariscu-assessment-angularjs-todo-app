@@ -7,12 +7,12 @@
       // templating the text to display for both the login and register form
       var loginFormDetails = {
           formMessage: "Are you new? why don't you create an account ",
-          formLink: '/register',
+          formLink: '#/register',
           formBtnName: 'Login'
         },
         registerFormDetails = {
           formMessage: 'Already have an account? just login ',
-          formLink: '/login',
+          formLink: '#/login',
           formBtnName: 'Register'
         }
 
@@ -28,8 +28,15 @@
             }
           })
         } else {
-          // handle register
-          $scope.dataLoading = false
+          AuthenticationService.Register($scope.userFormDetails, function (response) {
+            if (response.success) {
+              $location.path('/login')
+              $scope.success = response.message
+            } else {
+              $scope.error = response.message
+              $scope.dataLoading = false
+            }
+          })
         }
       }
 
