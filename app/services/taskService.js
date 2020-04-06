@@ -66,7 +66,32 @@
 
       service.UpdateTodoTask = function (data) {}
 
-      service.DeleteTodoTask = function (data) {}
+      service.DeleteTodoTask = function (id, callback) {
+        var authentication = service.getAuthenticationHeaders(),
+          res = {}
+
+        var req = {
+          method: 'DELETE',
+          url: baseUrl + `/tasks/${id}`,
+          headers: {
+            Authorization: `${authentication.token_type} ${authentication.access_token}`
+          }
+        }
+
+        $http(req).then(
+          function (response) {
+            if (response.status === 204) {
+              res.success = true
+            }
+
+            return callback(res)
+          },
+          function (response) {
+            // TODO: need to add better error handling below
+            callback(response)
+          }
+        )
+      }
 
       service.getTodoTaskById = function (id) {
         var todoTasks = JSON.parse(sessionStorage.getItem('todoTasks')) || [],

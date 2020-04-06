@@ -4,7 +4,8 @@
     '$routeParams',
     'TodoTaskService',
     '$location',
-    function ($scope, $routeParams, TodoTaskService, $location) {
+    '$route',
+    function ($scope, $routeParams, TodoTaskService, $location, $route) {
       /**
        * changing heading on todo task form depending on $routeParams.id
        * New todo tasks wont have an id as yet
@@ -33,8 +34,16 @@
         })
       }
 
-      $scope.handleTaskDeletion = function () {
-        console.log('handleTaskDeletion() method was clicked.')
+      $scope.handleTaskDeletion = function (id) {
+        TodoTaskService.DeleteTodoTask(id, function (response) {
+          if (response.success) {
+            $location.path('/')
+            $route.reload()
+          } else {
+            // TODO: need to add better error handling below
+            console.log(response)
+          }
+        })
       }
 
       function fetchAllTodoTasks() {
