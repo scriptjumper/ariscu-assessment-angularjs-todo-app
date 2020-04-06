@@ -18,7 +18,7 @@
             controller: 'AuthCtrl',
             templateUrl: 'views/auth.html'
           })
-          .otherwise({ redirectTo: '/login' })
+        // .otherwise({ redirectTo: '/login' })
 
         // removing #! from url
         $locationProvider.hashPrefix('')
@@ -33,7 +33,7 @@
       function ($rootScope, $location, $cookieStore, $http) {
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
           // TODO: need to fix below
-          var path = $location.path()
+          /* var path = $location.path()
           var isAuthenticated = localStorage.getItem('isAuthenticated')
           // redirect to login page if not logged in
           if (path !== '/login' || path !== '/register') {
@@ -52,7 +52,7 @@
             if (!isAuthenticated) {
               $location.path('/login')
             }
-          }
+          } */
         })
       }
     ])
