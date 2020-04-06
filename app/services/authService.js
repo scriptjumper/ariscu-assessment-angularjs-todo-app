@@ -5,7 +5,8 @@
     '$rootScope',
     '$timeout',
     'baseUrl',
-    function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
+    'TodoTaskService',
+    function ($http, $cookieStore, $rootScope, $timeout, baseUrl, TodoTaskService) {
       var service = {}
 
       service.Login = function (data, callback) {
@@ -63,6 +64,36 @@
           })
           .success(onSuccess)
           .error(onError)
+      }
+
+      service.getUserDetails = function (callback) {
+        var authentication = TodoTaskService.getAuthenticationHeaders(),
+          res = {}
+
+        var req = {
+          method: 'GET',
+          url: baseUrl + '/user',
+          headers: {
+            Authorization: `${authentication.token_type} ${authentication.access_token}`
+          }
+        }
+
+        $http(req).then(
+          function (response) {
+            if (response.status === 200) {
+              res.success = true
+              res.data = response.data || []
+
+              localStorage.setItem('currentUser', JSON.stringify(res.data))
+            }
+
+            return callback(res)
+          },
+          function (response) {
+            // TODO: need to add better error handling below
+            callback(response)
+          }
+        )
       }
 
       service.SetCredentials = function (authdata) {
