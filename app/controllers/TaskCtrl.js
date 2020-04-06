@@ -12,6 +12,7 @@
        */
       $scope.formTitle = $routeParams.id ? 'Edit Task' : 'New Task'
       $scope.todoTasks = []
+      $scope.query = ''
       fetchAllTodoTasks()
 
       if (!$routeParams.id) {

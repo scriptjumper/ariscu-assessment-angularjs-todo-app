@@ -13,11 +13,14 @@
   <div class="col-md-12">
     <a href="#/tasks/new" class="btn btn-success btn-lg btn-block"><span class="fa fa-plus"></span> New Task</a>
   </div>
+  <div class="mb-3 mt-3 btn-lg col-md-12">
+    <input class="form-control" type="text" placeholder="Search Todo Tasks" aria-label="Search" ng-model="query" />
+  </div>
 
   <div class="col-md-12 mt-md-2">
     <ul class="list-group">
       <ul class="list-group list-group-flush">
-        <li ng-repeat="todoTask in todoTasks | orderBy: 'created_at':true" class="list-group-item text-center">
+        <li ng-repeat="todoTask in todoTasks | orderBy: 'created_at':true | filter:query" class="list-group-item text-center">
           <span class="float-left">
             <button type="button" class="btn btn-success" ng-click="handleCompleteTask(todoTask.id)"><span class="fa fa-check"> </span></button>
           </span>
