@@ -8,7 +8,7 @@
         $routeProvider
           .when('/', {
             controller: 'TaskCtrl',
-            templateUrl: 'views/tasks.html'
+            templateUrl: 'views/todoTasks.html'
           })
           .when('/login', {
             controller: 'AuthCtrl',
