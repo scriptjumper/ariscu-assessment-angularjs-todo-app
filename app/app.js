@@ -26,6 +26,10 @@
             controller: 'TaskCtrl',
             templateUrl: 'views/shared/todoTaskForm.html'
           })
+          .when('/profile', {
+            controller: 'ProfileCtrl',
+            templateUrl: 'views/userProfile.html'
+          })
           .otherwise({ redirectTo: '/' })
       }
     ])
@@ -50,6 +54,11 @@
               }
               break
             case '/tasks/new':
+              if (!userIsAuthenticated) {
+                $location.path('/login')
+              }
+              break
+            case '/profile':
               if (!userIsAuthenticated) {
                 $location.path('/login')
               }
