@@ -59,6 +59,22 @@
         })
       }
 
+      $scope.handleCompleteTask = function (id) {
+        var taskDetails = angular.copy(TodoTaskService.getTodoTaskById(Number(id)))
+        taskDetails.isComplete = !taskDetails.isComplete
+
+        TodoTaskService.UpdateTodoTask(taskDetails, function (response) {
+          if (response.success) {
+            // route to todo list screen and call DB for all todo tasks
+            $location.path('/')
+            fetchAllTodoTasks()
+          } else {
+            // TODO: need to add better error handling below
+            console.log(response)
+          }
+        })
+      }
+
       function fetchAllTodoTasks() {
         TodoTaskService.FetchAllTodoTasks(function (response) {
           if (response.success) {

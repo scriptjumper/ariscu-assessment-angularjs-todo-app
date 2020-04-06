@@ -47,7 +47,7 @@
           headers: {
             Authorization: `${authentication.token_type} ${authentication.access_token}`
           },
-          data: { title: data.title }
+          data: { title: data.title, isComplete: false }
         }
 
         $http(req).then(
@@ -75,7 +75,8 @@
             Authorization: `${authentication.token_type} ${authentication.access_token}`
           },
           data: {
-            title: data.title
+            title: data.title,
+            isComplete: data.isComplete
           }
         }
 
