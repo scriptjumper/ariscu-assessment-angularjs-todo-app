@@ -64,7 +64,35 @@
         )
       }
 
-      service.UpdateTodoTask = function (data) {}
+      service.UpdateTodoTask = function (data, callback) {
+        var authentication = service.getAuthenticationHeaders(),
+          res = {}
+
+        var req = {
+          method: 'PUT',
+          url: baseUrl + `/tasks/${data.id}`,
+          headers: {
+            Authorization: `${authentication.token_type} ${authentication.access_token}`
+          },
+          data: {
+            title: data.title
+          }
+        }
+
+        $http(req).then(
+          function (response) {
+            if (response.status === 200) {
+              res.success = true
+            }
+
+            return callback(res)
+          },
+          function (response) {
+            // TODO: need to add better error handling below
+            callback(response)
+          }
+        )
+      }
 
       service.DeleteTodoTask = function (id, callback) {
         var authentication = service.getAuthenticationHeaders(),

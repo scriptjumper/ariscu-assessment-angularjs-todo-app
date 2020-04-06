@@ -22,16 +22,29 @@
       }
 
       $scope.handleTaskSave = function () {
-        TodoTaskService.SaveTodoTask($scope.taskDetails, function (response) {
-          if (response.success) {
-            // route to todo list screen and call DB for all todo tasks
-            $location.path('/')
-            fetchAllTodoTasks()
-          } else {
-            // TODO: need to add better error handling below
-            console.log(response)
-          }
-        })
+        if (!$routeParams.id) {
+          TodoTaskService.SaveTodoTask($scope.taskDetails, function (response) {
+            if (response.success) {
+              // route to todo list screen and call DB for all todo tasks
+              $location.path('/')
+              fetchAllTodoTasks()
+            } else {
+              // TODO: need to add better error handling below
+              console.log(response)
+            }
+          })
+        } else {
+          TodoTaskService.UpdateTodoTask($scope.taskDetails, function (response) {
+            if (response.success) {
+              // route to todo list screen and call DB for all todo tasks
+              $location.path('/')
+              fetchAllTodoTasks()
+            } else {
+              // TODO: need to add better error handling below
+              console.log(response)
+            }
+          })
+        }
       }
 
       $scope.handleTaskDeletion = function (id) {
