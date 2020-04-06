@@ -31,12 +31,38 @@
             return callback(res)
           },
           function (response) {
+            // TODO: need to add better error handling below
             callback(response)
           }
         )
       }
 
-      service.SaveTodoTask = function (data) {}
+      service.SaveTodoTask = function (data, callback) {
+        var authentication = service.getAuthenticationHeaders(),
+          res = {}
+
+        var req = {
+          method: 'POST',
+          url: baseUrl + '/tasks',
+          headers: {
+            Authorization: `${authentication.token_type} ${authentication.access_token}`
+          },
+          data: { title: data.title }
+        }
+
+        $http(req).then(
+          function (response) {
+            if (response.status === 201) {
+              res.success = true
+            }
+            return callback(res)
+          },
+          function (response) {
+            // TODO: need to add better error handling below
+            callback(response)
+          }
+        )
+      }
 
       service.UpdateTodoTask = function (data) {}
 
