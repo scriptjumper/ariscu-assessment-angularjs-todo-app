@@ -19,8 +19,14 @@
       $scope.submit = function () {
         $scope.dataLoading = true
         if (!$scope.showRegisterFields) {
-          // handle login
-          $scope.dataLoading = false
+          AuthenticationService.Login($scope.userFormDetails, function (response) {
+            if (response.success) {
+              $location.path('/')
+            } else {
+              $scope.error = response.message
+              $scope.dataLoading = false
+            }
+          })
         } else {
           // handle register
           $scope.dataLoading = false

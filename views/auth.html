@@ -13,19 +13,19 @@
         <form name="form" ng-submit="submit()" role="form">
           <!-- only for register form -->
           <div ng-show="showRegisterFields" class="form-group">
-            <input type="text" name="firstName" id="firstName" class="form-control" ng-model="firstName" placeholder="First Name" />
+            <input type="text" name="firstName" id="firstName" class="form-control" ng-model="userFormDetails.firstName" placeholder="First Name" />
           </div>
           <div ng-show="showRegisterFields" class="form-group">
-            <input type="text" name="lastName" id="lastName" class="form-control" ng-model="lastName" placeholder="Last Name" />
+            <input type="text" name="lastName" id="lastName" class="form-control" ng-model="userFormDetails.lastName" placeholder="Last Name" />
           </div>
           <!-- only for register form -->
 
           <div class="form-group">
-            <input type="email" name="email" id="email" class="form-control" ng-model="email" placeholder="Email" required />
+            <input type="email" name="email" id="email" class="form-control" ng-model="userFormDetails.email" placeholder="Email" required />
             <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Email is required</span>
           </div>
           <div class="form-group">
-            <input type="password" name="password" id="password" class="form-control" ng-model="password" placeholder="Password" required />
+            <input type="password" name="password" id="password" class="form-control" ng-model="userFormDetails.password" placeholder="Password" required />
             <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
           </div>
           <div class="text-center">
