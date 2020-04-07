@@ -41,7 +41,7 @@ Update the dependencies in the `package.json` with the following code:
 "dependencies": {
     "angular-route": "^1.2.32",
     "bootstrap": "^4.4.1",
-    "jquery": "^2.2.4",
+    "jquery": "^3.4.1",
     "prettier": "^2.0.2"
   },
 
@@ -185,18 +185,13 @@ In the `app/` directory, we will be creating `app.js` file with the code below:
 ;(function () {
   angular.module('TodoApp', ['ngRoute', 'ngCookies']).config([
     '$routeProvider',
-    '$locationProvider',
-    function ($routeProvider, $locationProvider) {
+    function ($routeProvider) {
       $routeProvider
         .when('/', {
           controller: 'TaskCtrl',
-          templateUrl: 'views/tasks.html'
+          templateUrl: 'views/todoTasks.html'
         })
         .otherwise({ redirectTo: '/' })
-
-      //
-      $locationProvider.hashPrefix('')
-      $locationProvider.html5Mode(true)
     }
   ])
 })()
@@ -208,7 +203,11 @@ In the `app/controllers` directory, we will be creating `TaskCtrl.js` file with 
 
 ```
 ;(function () {
-  angular.module('TodoApp').controller('TaskCtrl', [function () {}])
+  angular.module('TodoApp').controller('TaskCtrl', [
+    '$scope', function ($scope) {
+      ...
+    }
+  ])
 })()
 ```
 
@@ -230,4 +229,153 @@ We do this with the code below:
   </div>
 
 ...
+```
+
+### Setting Up Login Route
+
+We'll start in the `app.js`, add the code below to setup the login route:
+
+```
+...
+.when('/login', {
+  controller: 'AuthCtrl',
+  templateUrl: 'views/auth.html'
+})
+...
+```
+
+Next, we create the `auth.html` view file in `views/` with a basic login form code:
+
+```
+<div class="container">
+  <div class="col-md-6 mx-auto text-center">
+    <div class="header-title">
+      <h1 class="wv-heading--title">
+        Check out — it’s free!
+      </h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <div class="myform form">
+        <form name="form" role="form">
+          <div class="form-group">
+            <input type="email" name="email" id="email" class="form-control" placeholder="Email" required />
+          </div>
+          <div class="form-group">
+            <input type="password" name="password" id="password" class="form-control" placeholder="Password" required />
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-block send-button tx-tfm">Login</button>
+          </div>
+
+          <p class="small mt-3">Are you new? why don't you create an account <a href="#" class="ps-hero__content__link">here</a>.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+In the `app/controllers` directory, we will be creating `AuthCtrl.js` file with the code below:
+
+```
+;(function () {
+  angular.module('TodoApp').controller('AuthCtrl', [
+    '$scope', function ($scope) {
+      ...
+    }
+  ])
+})()
+```
+
+In the main directory we create our custom stylings, create the `app.css` file, with the code below:
+
+```
+body {
+  background-color: darkgray;
+}
+
+.send-button {
+  background: #54c7c3;
+  width: 100%;
+  font-weight: 600;
+  color: #fff;
+  padding: 8px 25px;
+}
+
+p.small {
+  font-size: 100%;
+}
+
+.g-button {
+  color: #fff !important;
+  border: 1px solid #ea4335;
+  background: #ea4335 !important;
+  width: 100%;
+  font-weight: 600;
+  color: #fff;
+  padding: 8px 25px;
+}
+
+.my-input {
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  cursor: text;
+  padding: 8px 10px;
+  transition: border 0.1s linear;
+}
+
+.header-title {
+  margin: 5rem 0;
+}
+
+h1 {
+  font-size: 31px;
+  line-height: 40px;
+  font-weight: 600;
+  color: #4c5357;
+}
+
+h2 {
+  color: #5e8396;
+  font-size: 21px;
+  line-height: 32px;
+  font-weight: 400;
+}
+
+.login-or {
+  position: relative;
+  color: #aaa;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.span-or {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  margin-left: -25px;
+  background-color: #fff;
+  width: 50px;
+  text-align: center;
+}
+
+.hr-or {
+  height: 1px;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 26px;
+  }
+  h2 {
+    font-size: 20px;
+  }
+}
 ```
