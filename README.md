@@ -570,3 +570,110 @@ Next we link the service in out `index.html` below the link to our `app/app.js` 
 <script src="app/services/authService.js"></script>
 ...
 ```
+
+### Sample Login/Register Services
+
+#### Register Service
+
+In our auth service file, we inject the services we will be using, we do that with the follow code:
+
+```
+angular.module('TodoApp').factory('AuthenticationService', [
+    function () {
+      '$http',
+      '$cookieStore',
+      '$rootScope',
+      '$timeout',
+      function ($http, $cookieStore, $rootScope, $timeout) {
+        ....
+      }
+    }
+])
+```
+
+Then, we create a register function that we will export to use in our auth controller:
+
+```
+function ($http, $cookieStore, $rootScope, $timeout) {
+  var service = {}
+
+  // temp function
+  function getRandomItem(arr) {
+    let items = arr
+    let randomitem = Math.floor(Math.random() * items.length)
+    return items[randomitem]
+  }
+
+  service.Register = function (firstName, lastName, email, password, callback) {
+    // simulating a dummy server request
+    $timeout(function () {
+      var response = { success: getRandomItem([true, false]) }
+      if (!response.success) {
+        response.message = 'Failed to create user!'
+      }
+      callback(response)
+    }, 1000)
+  }
+
+  return service
+```
+
+#### Login Service
+
+Finally, In our Authentication Service we create our login function with the code below:
+
+```
+...
+
+service.Login = function (email, password, callback) {
+  // simulating a dummy server request
+  $timeout(function () {
+    var response = { success: email === 'testuser@tdd.com' && password === 'test' }
+    if (!response.success) {
+      response.message = 'Login failed, please check your username and password!'
+    }
+    callback(response)
+  }, 1000)
+}
+
+...
+```
+
+##### Auth Controller
+
+In our auth controller, we first inject our `AuthenticationService`:
+
+```
+angular.module('TodoApp').controller('AuthCtrl', [
+    '$scope',
+    '$location',
+    'AuthenticationService',
+    function ($scope, $location, AuthenticationService) {
+```
+
+Then, we create a function using the `$scope` service with the code below:
+
+```
+$scope.submit = function () {
+  $scope.dataLoading = true
+  if (!$scope.showRegisterFields) {
+    AuthenticationService.Login($scope.email, $scope.password, function (response) {
+      if (response.success) {
+        $location.path('/')
+      } else {
+        $scope.error = response.message
+        $scope.dataLoading = false
+      }
+    })
+  } else {
+    AuthenticationService.Register($scope.firstName, $scope.lastName, $scope.email, $scope.password, function (response) {
+      if (response.success) {
+        $location.path('/')
+      } else {
+        $scope.error = response.message
+        $scope.dataLoading = false
+      }
+    })
+  }
+}
+```
