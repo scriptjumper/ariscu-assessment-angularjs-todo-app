@@ -677,3 +677,12 @@ $scope.submit = function () {
   }
 }
 ```
+
+## Linking App To Backend
+
+In our `app.js` with add a `.constant()` that will contain the url address to our backend url, after the `.config()` method close we add the follow:
+
+```
+.config(/* some code is already here eg routes to /, /login, /register */)
+.constant('baseUrl', 'http://localhost:8000/api')
+```
