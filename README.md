@@ -380,7 +380,7 @@ h2 {
 }
 ```
 
-### Setting Up Login Route
+### Setting Up Register Route
 
 We'll start in the `app.js`, add the code below to setup the login route:
 
@@ -539,4 +539,34 @@ Now we make changes to our `auth.html`, for this we will only make changes to th
 
   <p class="small mt-3">{{formDetails.formMessage}} <a ng-href="{{formDetails.formLink}}" class="ps-hero__content__link">here</a></p>
 </form>
+```
+
+## Creating Service
+
+We will create a service to handle all our requests to the backend.
+
+First we create a directory called `services/` in out `app/` directory.
+Then we create our `authService.js` file in the `app/services/` directory with basic service code:
+
+```
+;(function () {
+  angular.module('TodoApp').factory('AuthenticationService', [
+    function () {
+      var service = {}
+
+      return service
+    }
+  ])
+})()
+```
+
+Next we link the service in out `index.html` below the link to our `app/app.js` file:
+
+```
+...
+<script src="app/app.js"></script>
+
+<!-- Services -->
+<script src="app/services/authService.js"></script>
+...
 ```
