@@ -1121,3 +1121,41 @@ Above our `.constant()` function we add the code below:
   }
 ])
 ```
+
+## Creating Todo Task Directive
+
+We will be create a directive to help ask the user if they are sure that they was to delete the Todo Task.
+
+We create a new directory in `app/` called `directives/`, then we create our form file called `app/directives/confirmDeleteDirective.js` with code below:
+
+```
+;(function () {
+  angular.module('TodoApp').directive('ngConfirmClick', [
+    function () {
+      return {
+        link: function (scope, element, attr) {
+          var msg = attr.ngConfirmClick || 'Are you sure?'
+          var clickAction = attr.confirmedClick
+          element.bind('click', function (event) {
+            if (window.confirm(msg)) {
+              scope.$eval(clickAction)
+            }
+          })
+        }
+      }
+    }
+  ])
+})()
+```
+
+then import it in our `index.html`:
+
+```
+<script src="app/services/taskService.js"></script>
+
+<!-- Directives -->
+<script src="app/directives/confirmDeleteDirective.js"></script>
+
+<!-- Controllers -->
+<script src="app/controllers/TaskCtrl.js"></script>
+```
