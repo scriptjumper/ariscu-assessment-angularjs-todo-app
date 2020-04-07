@@ -740,11 +740,21 @@ function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
 
   service.Login = function (email, password, callback) {
     var onSuccess = function (response, status, headers, config) {
-      console.log(response)
+      if (status === 200) {
+        res.success = true
+        res.data = response
+      }
+      return callback(res)
     }
 
     var onError = function (response, status, headers, config) {
-      console.log(response)
+      if (status === 401) {
+        res.message = response.error
+      } else {
+        res.error = 'Unable to find user, Please check if your email and password is entered correctly.'
+      }
+
+      return callback(res)
     }
 
     $http
@@ -775,4 +785,45 @@ function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
 
   return service
 }
+```
+
+### Using Login Service
+
+We will be the way we are getting data from our view and handling the requestion in the controller, by doing the following:
+
+In `auth.html`:
+
+```
+<form name="form" ng-submit="submit()" role="form">
+  <!-- only for register form -->
+  <div ng-show="showRegisterFields" class="form-group">
+    <input type="text" name="firstName" id="firstName" class="form-control" ng-model="userFormDetails.firstName" placeholder="First Name" />
+  </div>
+  <div ng-show="showRegisterFields" class="form-group">
+    <input type="text" name="lastName" id="lastName" class="form-control" ng-model="userFormDetails.lastName" placeholder="Last Name" />
+  </div>
+  <!-- only for register form -->
+
+  <div class="form-group">
+    <input type="email" name="email" id="email" class="form-control" ng-model="userFormDetails.email" placeholder="Email" required />
+    <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Email is required</span>
+  </div>
+
+  <div class="form-group">
+    <input type="password" name="password" id="password" class="form-control" ng-model="userFormDetails.password" placeholder="Password" required />
+    <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
+  </div>
+```
+
+In `AuthCtrl.js`:
+
+```
+AuthenticationService.Login($scope.userFormDetails, function (response) {
+  if (response.success) {
+    $location.path('/')
+  } else {
+    $scope.error = response.message
+    $scope.dataLoading = false
+  }
+})
 ```
