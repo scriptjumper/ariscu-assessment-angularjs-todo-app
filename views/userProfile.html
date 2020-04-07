@@ -60,3 +60,19 @@
     </button>
   </div>
 </form>
+
+<div ng-if="success" id="message" style="position: relative; margin-top: 5em;">
+  <div style="padding: 5px;">
+    <div id="inner-message" class="alert alert-success">
+      {{success}}
+    </div>
+  </div>
+</div>
+
+<div ng-show="danger" id="message" style="position: relative; margin-top: 5em;">
+  <div style="padding: 5px;">
+    <div id="inner-message" class="alert alert-danger">
+      {{error}}
+    </div>
+  </div>
+</div>

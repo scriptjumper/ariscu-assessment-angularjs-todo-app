@@ -73,6 +73,7 @@ h2 {
 
 .completed_task {
   text-decoration: line-through;
+  font-weight: bold;
 }
 
 h2 {

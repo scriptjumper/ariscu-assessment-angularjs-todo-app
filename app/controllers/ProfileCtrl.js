@@ -23,13 +23,17 @@
       $scope.handleUserUpdate = function () {
         AuthenticationService.UpdateCurrentUsersDetails($scope.userDetails, function (response) {
           if (response.success) {
+            $scope.success = response.message
             getUserDetails()
+            setTimeout(() => {
+              delete $scope.success
+              $scope.$apply()
+            }, 3000)
           } else {
             $scope.error = response.message
           }
         })
       }
-      // $scope.$watch('file', function (newfile, oldfile) {})
 
       $scope.handleAvatarUpload = function () {
         AuthenticationService.changeUserAvatar($scope.filepreview, function (response) {
@@ -44,7 +48,8 @@
       }
 
       $scope.cancelAvatarUpload = function () {
-        $scope.filepreview = undefined
+        delete $scope.filepreview
+        delete $scope.file
       }
 
       function getUserDetails() {

@@ -123,6 +123,7 @@
           function (response) {
             if (response.status === 200) {
               res.success = true
+              res.message = response.data.success
             }
 
             return callback(res)
