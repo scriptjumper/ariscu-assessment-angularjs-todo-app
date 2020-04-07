@@ -477,3 +477,66 @@ In the `app/controllers` directory, we update the `AuthCtrl.js` file with the co
   ])
 })()
 ```
+
+#### Templating Dynamic Auth Form
+
+Open `AuthCtrl.js` and add the code below above the `constructor()` function:
+
+```
+// templating the text to display for both the login and register form
+var loginFormDetails = {
+    formMessage: "Are you new? why don't you create an account ",
+    formLink: '/register',
+    formBtnName: 'Login'
+  },
+  registerFormDetails = {
+    formMessage: 'Already have an account? just login ',
+    formLink: '/login',
+    formBtnName: 'Register'
+  }
+```
+
+In the `contructor()` function we replace all the code there with:
+
+```
+function constructor() {
+  // check path to see which form to display
+  $scope.showRegisterFields = false
+  $scope.formDetails = loginFormDetails
+  var path = $location.path()
+  if (path === '/register') {
+    $scope.showRegisterFields = true
+    $scope.formDetails = registerFormDetails
+  }
+}
+```
+
+Now we make changes to our `auth.html`, for this we will only make changes to the elements/attributes in the `<form>....</form>`:
+
+```
+<form name="form" ng-submit="submit()" role="form">
+  <!-- only for register form -->
+  <div ng-show="showRegisterFields" class="form-group">
+    <input type="text" name="firstName" id="firstName" class="form-control" ng-model="firstName" placeholder="First Name" />
+  </div>
+
+  <div ng-show="showRegisterFields" class="form-group">
+    <input type="text" name="lastName" id="lastName" class="form-control" ng-model="lastName" placeholder="Last Name" />
+  </div>
+  <!-- only for register form -->
+
+  ...
+  ...
+  ...
+
+  <div class="text-center">
+    <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-block send-button tx-tfm">{{formDetails.formBtnName}}</button>
+    <img
+      ng-if="dataLoading"
+      src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+    />
+  </div>
+
+  <p class="small mt-3">{{formDetails.formMessage}} <a ng-href="{{formDetails.formLink}}" class="ps-hero__content__link">here</a></p>
+</form>
+```
