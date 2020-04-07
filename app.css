@@ -75,6 +75,21 @@ h2 {
   text-decoration: line-through;
 }
 
+h2 {
+  font-size: 2em;
+
+  font-family: megrim, fantasy;
+  padding: 40px;
+  margin: 0;
+  color: #333;
+  text-align: center;
+}
+
+.emphasis {
+  font-family: vast-shadow, sans-serif;
+  font-size: 4em;
+}
+
 @media screen and (max-width: 480px) {
   h1 {
     font-size: 26px;
