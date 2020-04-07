@@ -955,3 +955,20 @@ Finally, we create a new directory in `views/` called `shared/`, then we create 
   </div>
 </div>
 ```
+
+### Routing To Todo Components
+
+In the `app.js` add the following:
+
+```
+...
+.when('/tasks/new', {
+  controller: 'TaskCtrl',
+  templateUrl: 'views/shared/todoTaskForm.html'
+})
+.when('/tasks/edit/:id', {
+  controller: 'TaskCtrl',
+  templateUrl: 'views/shared/todoTaskForm.html'
+})
+...
+```
