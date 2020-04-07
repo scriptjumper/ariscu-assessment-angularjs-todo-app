@@ -39,7 +39,7 @@
         var onSuccess = function (response, status, headers, config) {
           if (status === 200) {
             res.success = true
-            res.message = 'User created successfully, please login.'
+            res.data = response
           }
           return callback(res)
         }
