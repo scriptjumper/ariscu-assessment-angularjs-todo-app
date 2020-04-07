@@ -714,3 +714,65 @@ Add these two link above the `app.js` link in our `index.html` file:
 <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/495c65d2de.js" crossorigin="anonymous"></script>
 ```
+
+## Setting Up Service For Backend Requests
+
+Firstly, we need in inject our constant, we do this in our `app/services/authService.js` file:
+
+```
+...
+'$cookieStore',
+'$rootScope',
+'$timeout',
+'baseUrl',
+function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
+      var service = {}
+...
+```
+
+Then, we scrap all our functions in `app/services/authService.js` and create methods that is going to send a request to our `backend`.
+
+Our `app/services/authService.js` should look like this:
+
+```
+function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
+  var service = {}
+
+  service.Login = function (email, password, callback) {
+    var onSuccess = function (response, status, headers, config) {
+      console.log(response)
+    }
+
+    var onError = function (response, status, headers, config) {
+      console.log(response)
+    }
+
+    $http
+      .post(baseUrl + '/login', { email: email, password: password })
+      .success(onSuccess)
+      .error(onError)
+  }
+
+  service.Register = function (firstName, lastName, email, password, callback) {
+    var onSuccess = function (response, status, headers, config) {
+      console.log(response)
+    }
+
+    var onError = function (response, status, headers, config) {
+      console.log(response)
+    }
+
+    $http
+      .post(baseUrl + '/register', {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password
+      })
+      .success(onSuccess)
+      .error(onError)
+  }
+
+  return service
+}
+```
