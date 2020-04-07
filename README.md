@@ -1069,3 +1069,55 @@ Importing file in our `index.html`:
 <script src="app/services/authService.js"></script>
 <script src="app/services/taskService.js"></script>
 ```
+
+## Route Handling
+
+### Authenticated and Anauthenicated Users
+
+In our `app/app.js` we are going to add a `.run()` function to handle the routes we want our users to go to depending on whether they have logged in or not.
+
+Above our `.constant()` function we add the code below:
+
+```
+.run([
+  '$rootScope',
+  '$location',
+  '$cookieStore',
+  '$http',
+  function ($rootScope, $location, $cookieStore, $http) {
+    $rootScope.$on('$locationChangeStart', function (event, next, current) {
+      /**
+        * ! For production
+        * make use of a authenticate method in the backend
+        */
+      var path = $location.path()
+      var userIsAuthenticated = localStorage.getItem('isAuthenticated') || false
+
+      switch (path) {
+        case '/':
+          if (!userIsAuthenticated) {
+            $location.path('/login')
+          }
+          break
+        case '/tasks/new':
+          if (!userIsAuthenticated) {
+            $location.path('/login')
+          }
+          break
+        case '/login':
+          if (userIsAuthenticated) {
+            $location.path('/')
+          }
+          break
+        case '/register':
+          if (userIsAuthenticated) {
+            $location.path('/')
+          }
+          break
+        default:
+          break
+      }
+    })
+  }
+])
+```
