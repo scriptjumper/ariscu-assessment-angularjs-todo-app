@@ -686,3 +686,31 @@ In our `app.js` with add a `.constant()` that will contain the url address to ou
 .config(/* some code is already here eg routes to /, /login, /register */)
 .constant('baseUrl', 'http://localhost:8000/api')
 ```
+
+###### Changes to packages used in app
+
+I have made changes to the packages used, for the `CSS` imports I haved added `type="text/css"` attribute to fix a `mime` type error that kept showing up in the console.
+
+```
+- <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
+- <link rel="stylesheet" href="app.css" />
+-
+- <base href="/" />
++ <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.css" />
++ <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
++ <link rel="stylesheet" type="text/css" href="app.css" />
+```
+
+NB: Where `-` sign remove that code and where `+` sign add code.
+
+I've added 2 new Javascript packages:
+
+- This will help use Bootstraps navbar function for responsive mode
+- We will also use font awesome's icons for our buttons on our todo task list:
+
+Add these two link above the `app.js` link in our `index.html` file:
+
+```
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/495c65d2de.js" crossorigin="anonymous"></script>
+```
