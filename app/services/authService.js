@@ -5,8 +5,7 @@
     '$rootScope',
     '$timeout',
     'baseUrl',
-    'TodoTaskService',
-    function ($http, $cookieStore, $rootScope, $timeout, baseUrl, TodoTaskService) {
+    function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
       var service = {}
 
       service.Login = function (data, callback) {
@@ -67,7 +66,7 @@
       }
 
       service.getUserDetails = function (callback) {
-        var authentication = TodoTaskService.getAuthenticationHeaders(),
+        var authentication = service.getAuthenticationHeaders(),
           res = {}
 
         var req = {
@@ -97,7 +96,7 @@
       }
 
       service.UpdateCurrentUsersDatails = function (data, callback) {
-        var authentication = TodoTaskService.getAuthenticationHeaders(),
+        var authentication = service.getAuthenticationHeaders(),
           res = {}
 
         var req = {
@@ -130,6 +129,13 @@
 
       service.SetCredentials = function (authdata) {
         localStorage.setItem('isAuthenticated', JSON.stringify(authdata))
+      }
+
+      service.getAuthenticationHeaders = function () {
+        // get users authentication from localstorage
+        var authentication = JSON.parse(localStorage.getItem('isAuthenticated'))
+
+        return authentication
       }
 
       return service
