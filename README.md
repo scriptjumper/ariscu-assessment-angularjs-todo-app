@@ -1003,3 +1003,69 @@ angular.module('TodoApp').controller('TaskCtrl', [
   }
 ])
 ```
+
+### Todo Task Service
+
+In our app/services/ directory we create a service file to handle all our todo task requests:
+
+`app/services/taskService.js`:
+
+```
+;(function () {
+  angular.module('TodoApp').factory('TodoTaskService', [
+    '$http',
+    '$cookieStore',
+    '$rootScope',
+    '$timeout',
+    function ($http, $cookieStore, $rootScope, $timeout) {
+      var service = {}
+
+      service.todoTasks = [
+        {
+          id: 1,
+          title: 'Eating'
+        },
+        {
+          id: 2,
+          title: 'Code'
+        },
+        {
+          id: 3,
+          title: 'Sleep'
+        },
+        {
+          id: 4,
+          title: 'Repeat'
+        }
+      ]
+
+      service.FetchAllTodoTasks = function () {}
+
+      service.SaveTodoTask = function (data) {}
+
+      service.UpdateTodoTask = function (data) {}
+
+      service.DeleteTodoTask = function (data) {}
+
+      return service
+    }
+  ])
+})()
+```
+
+Linking task service with controller:
+
+```
+....
+'TodoTaskService',
+    function ($scope, $routeParams, TodoTaskService) {
+      ....
+```
+
+Importing file in our `index.html`:
+
+```
+<!-- Services -->
+<script src="app/services/authService.js"></script>
+<script src="app/services/taskService.js"></script>
+```
