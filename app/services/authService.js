@@ -96,6 +96,38 @@
         )
       }
 
+      service.UpdateCurrentUsersDatails = function (data, callback) {
+        var authentication = TodoTaskService.getAuthenticationHeaders(),
+          res = {}
+
+        var req = {
+          method: 'PUT',
+          url: baseUrl + '/user/update',
+          headers: {
+            Authorization: `${authentication.token_type} ${authentication.access_token}`
+          },
+          data: {
+            id: data.id,
+            firstName: data.firstName,
+            lastName: data.lastName
+          }
+        }
+
+        $http(req).then(
+          function (response) {
+            if (response.status === 200) {
+              res.success = true
+            }
+
+            return callback(res)
+          },
+          function (response) {
+            // TODO: need to add better error handling below
+            callback(response)
+          }
+        )
+      }
+
       service.SetCredentials = function (authdata) {
         localStorage.setItem('isAuthenticated', JSON.stringify(authdata))
       }

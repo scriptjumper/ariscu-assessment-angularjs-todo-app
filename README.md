@@ -1302,3 +1302,63 @@ At this step our files and project structure goes as follows:
 - <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/index.html">index.html</a>
 - <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/package.json">package.json</a>
 - <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app.css">app.css</a>
+
+# Updating user Details
+
+Firstly, we create an update service method with the follow code:
+
+```
+// app/service/authService.js
+...
+service.UpdateCurrentUsersDatails = function (data, callback) {
+  var authentication = TodoTaskService.getAuthenticationHeaders(),
+    res = {}
+
+  var req = {
+    method: 'PUT',
+    url: baseUrl + '/user/update',
+    headers: {
+      Authorization: `${authentication.token_type} ${authentication.access_token}`
+    },
+    data: {
+      id: data.id,
+      firstName: data.firstName,
+      lastName: data.lastName
+    }
+  }
+
+  $http(req).then(
+    function (response) {
+      if (response.status === 200) {
+        res.success = true
+      }
+
+      return callback(res)
+    },
+    function (response) {
+      // TODO: need to add better error handling below
+      callback(response)
+    }
+  )
+}
+...
+```
+
+then we call our service in our controller:
+
+```
+// app/controllers/ProfileCtrl.js
+
+...
+ $scope.handleUserUpdate = function () {
+  AuthenticationService.UpdateCurrentUsersDatails($scope.userDetails, function (response) {
+    if (response.success) {
+      getUserDetails()
+    } else {
+      // TODO: need to add better error handling below
+      $scope.error = response.message
+    }
+  })
+}
+...
+```

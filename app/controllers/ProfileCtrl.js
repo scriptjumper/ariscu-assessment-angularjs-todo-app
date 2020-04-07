@@ -21,7 +21,14 @@
       }
 
       $scope.handleUserUpdate = function () {
-        console.log($scope.userDetails)
+        AuthenticationService.UpdateCurrentUsersDatails($scope.userDetails, function (response) {
+          if (response.success) {
+            getUserDetails()
+          } else {
+            // TODO: need to add better error handling below
+            $scope.error = response.message
+          }
+        })
       }
 
       function getUserDetails() {
