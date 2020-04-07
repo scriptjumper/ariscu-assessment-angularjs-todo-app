@@ -379,3 +379,73 @@ h2 {
   }
 }
 ```
+
+### Setting Up Login Route
+
+We'll start in the `app.js`, add the code below to setup the login route:
+
+```
+...
+.when('/register', {
+  controller: 'AuthCtrl',
+  templateUrl: 'views/auth.html'
+})
+...
+```
+
+Next, we wont be creating a separate view for the registration form instead we will make the `views/auth.html` dynamic.
+We do this with the code below:
+
+```
+<div class="row">
+    <div class="col-md-6 mx-auto">
+      <div class="myform form">
+        <form name="form" ng-submit="submit()" role="form">
+          <!-- only for regist form -->
+          <div ng-if="showLoginForm === false" class="form-group">
+            <input type="text" name="firstName" id="firstName" class="form-control" ng-model="firstName" placeholder="First Name" />
+          </div>
+
+          <div ng-if="showLoginForm === false" class="form-group">
+            <input type="text" name="lastName" id="lastName" class="form-control" ng-model="lastName" placeholder="Last Name" />
+          </div>
+          <!-- only for regist form -->
+
+          <div class="form-group">
+            <input type="email" name="email" id="email" class="form-control" placeholder="Email" required />
+            <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Email is required</span>
+          </div>
+
+          <div class="form-group">
+            <input type="password" name="password" id="password" class="form-control" placeholder="Password" required />
+            <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
+          </div>
+
+          <div class="text-center">
+            <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-block send-button tx-tfm">{{formBtnName}}</button>
+            <img
+              ng-if="dataLoading"
+              src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+            />
+          </div>
+
+          <p class="small mt-3">{{formMessage}} <a ng-href="{{formLink}}" class="ps-hero__content__link">here</a></p>
+        </form>
+      </div>
+      <br />
+      <div ng-show="error" class="alert alert-danger">{{error}}</div>
+    </div>
+  </div>
+```
+
+In the `app/controllers` directory, we will be creating `AuthCtrl.js` file with the code below:
+
+```
+;(function () {
+  angular.module('TodoApp').controller('AuthCtrl', [
+    '$scope', function ($scope) {
+      ...
+    }
+  ])
+})()
+```
