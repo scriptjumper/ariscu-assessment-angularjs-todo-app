@@ -45,10 +45,18 @@
         }
 
         var onError = function (response, status, headers, config) {
-          if (status === 401) {
-            res.message = response.error
-          } else {
-            res.error = 'Unable to find user, Please check if your email and password is entered correctly.'
+          switch (status) {
+            case 401:
+              res.message = response.message
+              break
+            case 500:
+              if (response.message.includes('duplicate key value violates unique constraint'))
+                res.message = 'Oops, Email enter is already in use by another account.'
+              else res.message = 'Server seems to be offline'
+              break
+
+            default:
+              break
           }
 
           return callback(res)
@@ -89,7 +97,6 @@
             return callback(res)
           },
           function (response) {
-            // TODO: need to add better error handling below
             callback(response)
           }
         )
@@ -121,7 +128,6 @@
             return callback(res)
           },
           function (response) {
-            // TODO: need to add better error handling below
             callback(response)
           }
         )
@@ -153,7 +159,6 @@
             return callback(res)
           },
           function (response) {
-            // TODO: need to add better error handling below
             callback(response)
           }
         )

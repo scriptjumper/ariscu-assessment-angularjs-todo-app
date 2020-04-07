@@ -31,7 +31,6 @@
             return callback(res)
           },
           function (response) {
-            // TODO: need to add better error handling below
             callback(response)
           }
         )
@@ -58,7 +57,6 @@
             return callback(res)
           },
           function (response) {
-            // TODO: need to add better error handling below
             callback(response)
           }
         )
@@ -89,7 +87,6 @@
             return callback(res)
           },
           function (response) {
-            // TODO: need to add better error handling below
             callback(response)
           }
         )
@@ -116,7 +113,6 @@
             return callback(res)
           },
           function (response) {
-            // TODO: need to add better error handling below
             callback(response)
           }
         )

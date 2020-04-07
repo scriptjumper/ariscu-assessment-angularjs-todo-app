@@ -21,26 +21,24 @@
         $scope.dataLoading = true
         if (!$scope.showRegisterFields) {
           AuthenticationService.Login($scope.userFormDetails, function (response) {
-            if (response.success) {
-              AuthenticationService.SetCredentials(response.data)
-              $location.path('/')
-              $window.location.reload()
-            } else {
-              $scope.error = response.message
-              $scope.dataLoading = false
-            }
+            userIsAuthenticated(response)
           })
         } else {
           AuthenticationService.Register($scope.userFormDetails, function (response) {
-            if (response.success) {
-              AuthenticationService.SetCredentials(response.data)
-              $location.path('/')
-              $window.location.reload()
-            } else {
-              $scope.error = response.message
-              $scope.dataLoading = false
-            }
+            userIsAuthenticated(response)
           })
+        }
+      }
+
+      function userIsAuthenticated(response) {
+        if (response.success) {
+          AuthenticationService.SetCredentials(response.data)
+          $location.path('/')
+          $window.location.reload()
+          $scope.error = undefined
+        } else {
+          $scope.error = response.message
+          $scope.dataLoading = false
         }
       }
 

@@ -25,7 +25,6 @@
           if (response.success) {
             getUserDetails()
           } else {
-            // TODO: need to add better error handling below
             $scope.error = response.message
           }
         })
@@ -39,7 +38,6 @@
             getUserDetails()
             $window.location.reload()
           } else {
-            // TODO: need to add better error handling below
             $scope.error = response.message
           }
         })
@@ -54,7 +52,6 @@
           if (response.success) {
             $scope.userDetails = response.data
           } else {
-            // TODO: need to add better error handling below
             $scope.error = response.message
           }
         })

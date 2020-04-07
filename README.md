@@ -1336,7 +1336,6 @@ service.UpdateCurrentUsersDetails = function (data, callback) {
       return callback(res)
     },
     function (response) {
-      // TODO: need to add better error handling below
       callback(response)
     }
   )
@@ -1355,7 +1354,6 @@ then we call our service in our controller:
     if (response.success) {
       getUserDetails()
     } else {
-      // TODO: need to add better error handling below
       $scope.error = response.message
     }
   })
@@ -1491,7 +1489,6 @@ service.changeUserAvatar = function (data, callback) {
         return callback(res)
       },
       function (response) {
-        // TODO: need to add better error handling below
         callback(response)
       }
     )

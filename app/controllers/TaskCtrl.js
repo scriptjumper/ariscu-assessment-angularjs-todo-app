@@ -25,25 +25,11 @@
       $scope.handleTaskSave = function () {
         if (!$routeParams.id) {
           TodoTaskService.SaveTodoTask($scope.taskDetails, function (response) {
-            if (response.success) {
-              // route to todo list screen and call DB for all todo tasks
-              $location.path('/')
-              fetchAllTodoTasks()
-            } else {
-              // TODO: need to add better error handling below
-              console.log(response)
-            }
+            userIsAuthorised(response)
           })
         } else {
           TodoTaskService.UpdateTodoTask($scope.taskDetails, function (response) {
-            if (response.success) {
-              // route to todo list screen and call DB for all todo tasks
-              $location.path('/')
-              fetchAllTodoTasks()
-            } else {
-              // TODO: need to add better error handling below
-              console.log(response)
-            }
+            userIsAuthorised(response)
           })
         }
       }
@@ -54,8 +40,7 @@
             $location.path('/')
             $route.reload()
           } else {
-            // TODO: need to add better error handling below
-            console.log(response)
+            $scope.error = response.message
           }
         })
       }
@@ -70,8 +55,7 @@
             $location.path('/')
             fetchAllTodoTasks()
           } else {
-            // TODO: need to add better error handling below
-            console.log(response)
+            $scope.error = response.message
           }
         })
       }
@@ -81,10 +65,18 @@
           if (response.success) {
             $scope.todoTasks = response.data
           } else {
-            // TODO: need to add better error handling below
             $scope.error = response.message
           }
         })
+      }
+
+      function userIsAuthorised(response) {
+        if (response.success) {
+          $location.path('/')
+          fetchAllTodoTasks()
+        } else {
+          $scope.error = response.message
+        }
       }
     }
   ])

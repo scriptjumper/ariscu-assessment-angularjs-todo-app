@@ -41,9 +41,17 @@
           <p class="small mt-3">{{formDetails.formMessage}} <a ng-href="{{formDetails.formLink}}" class="ps-hero__content__link">here</a></p>
         </form>
       </div>
+
       <br />
-      <div ng-show="error" class="alert alert-danger">{{error}}</div>
-      <div ng-show="success" class="alert alert-danger">{{success}}</div>
+
+      <div ng-show="error" id="message" style="position: relative; margin-top: 5em;">
+        <div style="padding: 5px;">
+          <div id="inner-message" class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{error}}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
