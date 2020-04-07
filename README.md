@@ -1159,3 +1159,46 @@ then import it in our `index.html`:
 <!-- Controllers -->
 <script src="app/controllers/TaskCtrl.js"></script>
 ```
+
+## Creating Navbar Directive
+
+We create our form file called `app/directives/navbarDirective.js` with code below:
+
+```
+;(function () {
+  angular.module('TodoApp').directive('navbar', function () {
+    return {
+      restrict: 'E',
+      controller: 'ProfileCtrl',
+      templateUrl: 'views/shared/navbar.html'
+    }
+  })
+})()
+```
+
+then we create the controller for the navbar:
+
+```
+// app/controllers/ProfileCtrl.js
+
+;(function () {
+  angular.module('TodoApp').controller('ProfileCtrl', [function () {}])
+})()
+```
+
+finally, we linking our navbar controller and directive to our index.html:
+
+```
+...
+
+    <!-- Directives -->
+    <script src="app/directives/confirmDeleteDirective.js"></script>
+    <script src="app/directives/navbarDirective.js"></script>
+
+    <!-- Controllers -->
+    <script src="app/controllers/TaskCtrl.js"></script>
+    <script src="app/controllers/AuthCtrl.js"></script>
+    <script src="app/controllers/ProfileCtrl.js"></script>
+  </body>
+</html>
+```
