@@ -878,3 +878,80 @@ service.Register = function (data, callback) {
     .error(onError)
 }
 ```
+
+## Todo Components
+
+### Todo Task List Component
+
+Firstly, we create our `todoTasks.html` file in the `views/` directory with code below:
+
+```
+<div class="text-center mt-md-5">
+  <h1>All todos</h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <a href="#/" class="btn btn-success btn-lg btn-block"><span class="fa fa-plus"></span> New Task</a>
+  </div>
+
+  <div class="col-md-12 mt-md-2">
+    <ul class="list-group">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item text-center">
+          <span class="float-left">
+            <button type="button" class="btn btn-success"><span class="fa fa-check"> </span></button>
+          </span>
+          <span>My first todo task</span>
+          <span class="float-right">
+            <a href="#/" class="btn btn-primary"><span class="fa fa-pencil"></span></a>
+            <button type="button" class="btn btn-danger">
+              <span class="fa fa-trash"> </span>
+            </button>
+          </span>
+        </li>
+
+        <li class="list-group-item text-center">
+          <span class="float-left">
+            <button type="button" class="btn btn-success"><span class="fa fa-check"> </span></button>
+          </span>
+          <span>My second todo task</span>
+          <span class="float-right">
+            <a href="#/" class="btn btn-primary"><span class="fa fa-pencil"></span></a>
+            <button type="button" class="btn btn-danger">
+              <span class="fa fa-trash"> </span>
+            </button>
+          </span>
+        </li>
+      </ul>
+    </ul>
+  </div>
+</div>
+```
+
+### Todo Form Component
+
+Finally, we create a new directory in `views/` called `shared/`, then we create our form file called `views/shared/todoTaskForm.html` with code below:
+
+```
+<div class="text-center mt-md-5">
+  <h1>New Todo Task</h1>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form name="todoTaskForm">
+      <div class="form-group">
+        <input type="text" class="form-control" name="title" placeholder="Task Title" required />
+      </div>
+
+      <div class="form-group">
+        <button type="button" class="btn btn-success btn-lg btn-block"><span class="fa fa-save"></span> Save</button>
+      </div>
+      <div class="form-group">
+        <a href="#/" class="btn btn-default btn-lg btn-block"><span class="fa fa-remove"></span> Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+```
