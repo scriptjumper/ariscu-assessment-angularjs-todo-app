@@ -1176,7 +1176,7 @@ We create our form file called `app/directives/navbarDirective.js` with code bel
 })()
 ```
 
-then we create the controller for the navbar:
+then, we create the controller for the navbar:
 
 ```
 // app/controllers/ProfileCtrl.js
@@ -1186,9 +1186,65 @@ then we create the controller for the navbar:
 })()
 ```
 
-finally, we linking our navbar controller and directive to our index.html:
+then, we create the view file and code for the navbar:
 
 ```
+// views/shared/navbar.html
+
+<nav ng-if="showNavbar" class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#/tasks">Todo App</a>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavDropdown"
+    aria-controls="navbarNavDropdown"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav mr-auto"></ul>
+
+    <ul class="navbar-nav">
+      <li class="nav-item dropdown">
+        <a
+          style="cursor: pointer;"
+          class="nav-link dropdown-toggle"
+          id="navbarDropdownMenuLink"
+          role="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Settings
+        </a>
+
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="#">Profile</a>
+          <a class="dropdown-item" ng-click="handleLogout()">Logout</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+```
+
+finally, we linking our navbar view, controller and directive to our index.html:
+
+```
+...
+
+</head>
+  <body>
+    <div ng-app="TodoApp">
+      <navbar></navbar>
+
+      <div class="container">
+        <div ng-view></div>
+      </div>
 ...
 
     <!-- Directives -->
