@@ -1283,3 +1283,22 @@ To hide our navbar from the login and register route we do the following in out 
   ])
 })()
 ```
+
+At this step our files and project structure goes as follows:
+
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/controllers/AuthCtrl.js">app/controllers/AuthCtrl.js</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/controllers/ProfileCtrl.js">app/controllers/ProfileCtrl.js</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/controllers/TaskCtrl.js">app/controllers/TaskCtrl.js</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/directives/confirmDeleteDirective.js">app/directives/confirmDeleteDirective.js</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/directives/navbarDirective.js">app/directives/navbarDirective.js</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/services/authService.js">app/services/authService.js</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/services/taskService.js">app/services/taskService.js</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/app.js">app/app.js</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/views/shared/navbar.html">views/shared/navbar.html</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/views/shared/todoTaskForm.html">views/shared/todoTaskForm.html</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/views/auth.html">views/auth.html</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/views/todoTasks.html">views/todoTasks.html</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/views/userProfile.html">views/userProfile.html</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/index.html">index.html</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/package.json">package.json</a>
+- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app.css">app.css</a>
