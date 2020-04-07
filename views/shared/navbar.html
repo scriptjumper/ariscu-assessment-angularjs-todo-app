@@ -1,5 +1,8 @@
 <nav ng-if="showNavbar" class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#/tasks">Todo App</a>
+  <a class="navbar-brand" href="#/tasks"
+    ><div>
+      <img ng-src="{{userDetails.avatar}}" alt="" style="height: 2em; width: 2em;" /></div
+  ></a>
   <button
     class="navbar-toggler"
     type="button"
@@ -13,7 +16,11 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav mr-auto"></ul>
+    <ul class="navbar-nav mr-auto">
+      <li>
+        Hello! {{userDetails.firstName}}
+      </li>
+    </ul>
 
     <ul class="navbar-nav">
       <li class="nav-item dropdown">
