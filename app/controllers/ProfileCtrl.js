@@ -37,6 +37,7 @@
           if (response.success) {
             $scope.filepreview = undefined
             getUserDetails()
+            $window.location.reload()
           } else {
             // TODO: need to add better error handling below
             $scope.error = response.message
