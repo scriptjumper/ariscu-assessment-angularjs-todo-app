@@ -1310,7 +1310,7 @@ Firstly, we create an update service method with the follow code:
 ```
 // app/service/authService.js
 ...
-service.UpdateCurrentUsersDatails = function (data, callback) {
+service.UpdateCurrentUsersDetails = function (data, callback) {
   var authentication = TodoTaskService.getAuthenticationHeaders(),
     res = {}
 
@@ -1351,7 +1351,7 @@ then we call our service in our controller:
 
 ...
  $scope.handleUserUpdate = function () {
-  AuthenticationService.UpdateCurrentUsersDatails($scope.userDetails, function (response) {
+  AuthenticationService.UpdateCurrentUsersDetails($scope.userDetails, function (response) {
     if (response.success) {
       getUserDetails()
     } else {
@@ -1361,4 +1361,139 @@ then we call our service in our controller:
   })
 }
 ...
+```
+
+## Avatar Upload
+
+First we create a directive for the upload.
+In `app/directives/` we create a file `uploadFileDirective.js` and add the follow code to it:
+
+```
+;(function () {
+  angular.module('TodoApp').directive('fileinput', [
+    function () {
+      return {
+        scope: {
+          fileinput: '=',
+          filepreview: '='
+        },
+        link: function (scope, element, attributes) {
+          element.bind('change', function (changeEvent) {
+            scope.fileinput = changeEvent.target.files[0]
+            var reader = new FileReader()
+            reader.onload = function (loadEvent) {
+              scope.$apply(function () {
+                scope.filepreview = loadEvent.target.result
+              })
+            }
+            reader.readAsDataURL(scope.fileinput)
+          })
+        }
+      }
+    }
+  ])
+})()
+```
+
+Then, add the link to the directive in our `index.html` under our other directives:
+
+```
+<script src="app/directives/uploadFileDirective.js"></script>
+```
+
+We can now change our view to display our existing avatar image and also change our avatar.
+
+Add the code below at top of `userProfile.html`:
+
+```
+<!-- views/userProfile.html -->
+
+<h1 class="mt-md-5">Avatar</h1>
+<hr />
+
+<form>
+  <div class="row row-no-margin" style="margin-bottom: 1em;">
+    <div class="col-xs-12 col-sm-12 col-no-padding" ng-show="filepreview == null">
+      <img ng-src="{{userDetails.avatar}}" alt="" style="height: 200px; width: 200px;" class="thumbnail img-responsive rounded mx-auto d-block" />
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-no-padding" ng-show="filepreview != null" style="margin-bottom: 1em;">
+      <img ng-src="{{filepreview}}" alt="" style="height: 200px; width: 200px;" class="thumbnail img-responsive rounded mx-auto d-block" />
+    </div>
+  </div>
+
+  <div class="custom-file" id="customFile" lang="es">
+    <div class="col-md-12">
+      <input type="file" fileinput="file" class="custom-file-input" filepreview="filepreview" />
+      <label class="custom-file-label" for="exampleInputFile">
+        Select image file...
+      </label>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mt-md-3 mt-sm-3 mt-xs-3" ng-show="filepreview != null">
+    <button type="button" class="btn btn-warning mr-md-1 mr-sm-1 mr-xs-1" ng-click="cancelAvatarUpload()">Cancel Upload</button>
+    <button type="button" class="btn btn-success" ng-click="handleAvatarUpload()">Upload Image</button>
+  </div>
+</form>
+
+...
+
+```
+
+Then we add our scope variables in our `ProfileCtrl.js`:
+
+```
+...
+$scope.handleAvatarUpload = function () {
+  AuthenticationService.changeUserAvatar($scope.filepreview, function (response) {
+    if (response.success) {
+      $scope.filepreview = undefined
+      getUserDetails()
+    } else {
+      $scope.error = response.message
+    }
+  })
+}
+
+$scope.cancelAvatarUpload = function () {
+  $scope.filepreview = undefined
+}
+...
+```
+
+Finally, we can create our request in our service file and change avatar images from our app:
+
+```
+service.changeUserAvatar = function (data, callback) {
+    var authentication = service.getAuthenticationHeaders(),
+      user = JSON.parse(localStorage.getItem('currentUser'))
+    res = {}
+
+    var req = {
+      method: 'POST',
+      url: baseUrl + '/user/avatar/new',
+      headers: {
+        Authorization: `${authentication.token_type} ${authentication.access_token}`
+      },
+      data: {
+        id: user.id,
+        avatar: data
+      }
+    }
+
+    $http(req).then(
+      function (response) {
+        if (response.status === 200) {
+          res.success = true
+        }
+
+        return callback(res)
+      },
+      function (response) {
+        // TODO: need to add better error handling below
+        callback(response)
+      }
+    )
+}
 ```

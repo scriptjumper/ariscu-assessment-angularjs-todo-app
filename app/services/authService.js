@@ -95,7 +95,7 @@
         )
       }
 
-      service.UpdateCurrentUsersDatails = function (data, callback) {
+      service.UpdateCurrentUsersDetails = function (data, callback) {
         var authentication = service.getAuthenticationHeaders(),
           res = {}
 
@@ -109,6 +109,38 @@
             id: data.id,
             firstName: data.firstName,
             lastName: data.lastName
+          }
+        }
+
+        $http(req).then(
+          function (response) {
+            if (response.status === 200) {
+              res.success = true
+            }
+
+            return callback(res)
+          },
+          function (response) {
+            // TODO: need to add better error handling below
+            callback(response)
+          }
+        )
+      }
+
+      service.changeUserAvatar = function (data, callback) {
+        var authentication = service.getAuthenticationHeaders(),
+          user = JSON.parse(localStorage.getItem('currentUser'))
+        res = {}
+
+        var req = {
+          method: 'POST',
+          url: baseUrl + '/user/avatar/new',
+          headers: {
+            Authorization: `${authentication.token_type} ${authentication.access_token}`
+          },
+          data: {
+            id: user.id,
+            avatar: data
           }
         }
 

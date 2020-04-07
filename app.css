@@ -90,6 +90,10 @@ h2 {
   font-size: 4em;
 }
 
+.custom-file-input ~ .custom-file-label::after {
+  content: 'Change Avatar';
+}
+
 @media screen and (max-width: 480px) {
   h1 {
     font-size: 26px;

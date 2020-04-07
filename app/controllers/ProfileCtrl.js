@@ -21,7 +21,7 @@
       }
 
       $scope.handleUserUpdate = function () {
-        AuthenticationService.UpdateCurrentUsersDatails($scope.userDetails, function (response) {
+        AuthenticationService.UpdateCurrentUsersDetails($scope.userDetails, function (response) {
           if (response.success) {
             getUserDetails()
           } else {
@@ -29,6 +29,23 @@
             $scope.error = response.message
           }
         })
+      }
+      // $scope.$watch('file', function (newfile, oldfile) {})
+
+      $scope.handleAvatarUpload = function () {
+        AuthenticationService.changeUserAvatar($scope.filepreview, function (response) {
+          if (response.success) {
+            $scope.filepreview = undefined
+            getUserDetails()
+          } else {
+            // TODO: need to add better error handling below
+            $scope.error = response.message
+          }
+        })
+      }
+
+      $scope.cancelAvatarUpload = function () {
+        $scope.filepreview = undefined
       }
 
       function getUserDetails() {
