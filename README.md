@@ -1,5 +1,47 @@
 # AngularJS Todo App
 
+## Quick Startup
+
+### todo-list-api
+
+Before running your app make sure you your rest api(backend) is running on `http://localhost:8000/api`, if that's not the case you can always change your backend url in the `app/app.js` file under the constant `baseUrl`.
+
+Also make sure you have the nessesary database and tables for this app for more information on the database and backend go to <a href="https://github.com/scriptjumper/scriptjumper-api-laravel">scriptjumper-api-laravel</a>.
+
+#### Cloning Repository
+
+Use the following command to clone repository (if you have git cli):
+
+```
+$ git clone https://github.com/scriptjumper/angularjs-todo-app.git
+```
+
+alternatively you can download the zipped files.
+
+Then, change directory in your terminal to the project directory:
+
+```
+$ cd angularjs-todo-app/
+```
+
+#### Installing required packages
+
+Firstly you need to make sure you have node and npm installed if not please go <a href='https://nodejs.org/en/' target='_blank'>here</a> and follow the installation process to setup you machine.
+
+Run the command below to install all the necessary packages:
+
+```
+$ npm ci
+```
+
+#### Launching App
+
+Run the command below:
+
+```
+$ npm run dev
+```
+
 ## Setting up an AngularJS App
 
 ### Installing Startup Packages
@@ -1220,7 +1262,7 @@ then, we create the view file and code for the navbar:
           aria-expanded="false"
         >
           Settings
-        </a>
+        </>
 
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item" href="#">Profile</a>
