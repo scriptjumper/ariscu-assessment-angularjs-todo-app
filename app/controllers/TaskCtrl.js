@@ -60,10 +60,19 @@
         })
       }
 
+      function inCompleteTasks(tasks) {
+        $scope.inCompleteTasks = 0
+
+        tasks.forEach((task) => {
+          if (task.isComplete === false) $scope.inCompleteTasks++
+        })
+      }
+
       function fetchAllTodoTasks() {
         TodoTaskService.FetchAllTodoTasks(function (response) {
           if (response.success) {
             $scope.todoTasks = response.data
+            inCompleteTasks(response.data)
           } else {
             $scope.error = response.message
           }
