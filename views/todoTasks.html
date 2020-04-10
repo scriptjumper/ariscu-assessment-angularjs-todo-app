@@ -13,7 +13,7 @@
   <div class="col-md-12 mt-md-2">
     <ul class="list-group">
       <ul class="list-group list-group-flush">
-        <li ng-repeat="todoTask in todoTasks | orderBy: 'created_at':true | filter:query" class="list-group-item text-center">
+        <li ng-repeat="todoTask in todoTasks | orderBy: 'created_at':true | filter: { title: query }" class="list-group-item text-center">
           <span class="float-left">
             <button type="button" class="btn btn-success" ng-click="handleCompleteTask(todoTask.id)">
               <span
