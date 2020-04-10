@@ -7,7 +7,15 @@
     <a href="#/tasks/new" class="btn btn-success btn-lg btn-block"><span class="fa fa-plus"></span> New Task</a>
   </div>
   <div ng-show="todoTasks" class="mb-3 mt-3 btn-lg col-md-12">
-    <input class="form-control" type="text" placeholder="Search To do Task" aria-label="Search" ng-model="query" />
+    <input
+      class="form-control"
+      type="text"
+      placeholder="Search To do Task"
+      aria-label="Search"
+      ng-model="query"
+      ng-model-options="{ debounce: 200 }"
+      ng-change="handleSearch(query)"
+    />
   </div>
 
   <div class="col-md-12 mt-md-2">
@@ -39,8 +47,13 @@
           </span>
         </li>
       </ul>
+
       <div ng-hide="todoTasks" class="alert alert-info">
         <span><i class="fa fa-info"></i> Oops seems like you dont have any To do tasks, to get start click <strong>New Task</strong> button</span>
+      </div>
+
+      <div ng-if="query !== '' && items.length == 0" class="alert alert-warning">
+        <span><i class="fa fa-info"></i> Oops seems like we could not find your <strong>to do</strong> tasks.</span>
       </div>
     </ul>
   </div>
