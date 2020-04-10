@@ -123,13 +123,13 @@
           function (response) {
             if (response.status === 200) {
               res.success = true
-              res.message = response.data.success
+              res.message = response.data.message
             }
 
             return callback(res)
           },
           function (response) {
-            callback(response)
+            callback(response.data)
           }
         )
       }
@@ -160,7 +160,7 @@
             return callback(res)
           },
           function (response) {
-            callback(response)
+            callback(response.data)
           }
         )
       }

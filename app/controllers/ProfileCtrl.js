@@ -25,14 +25,17 @@
           if (response.success) {
             $scope.success = response.message
             getUserDetails()
-            setTimeout(() => {
-              delete $scope.success
-              $scope.$apply()
-            }, 3000)
           } else {
             $scope.error = response.message
           }
         })
+
+        // removing alert message after 5 seconds
+        setTimeout(() => {
+          delete $scope.success
+          delete $scope.error
+          $scope.$apply()
+        }, 5000)
       }
 
       $scope.handleAvatarUpload = function () {
