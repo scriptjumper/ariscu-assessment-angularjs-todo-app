@@ -2,10 +2,11 @@
   angular.module('TodoApp').controller('TaskCtrl', [
     '$scope',
     '$routeParams',
-    'TodoTaskService',
+    '$filter',
     '$location',
     '$route',
-    function ($scope, $routeParams, TodoTaskService, $location, $route) {
+    'TodoTaskService',
+    function ($scope, $routeParams, $filter, $location, $route, TodoTaskService) {
       /**
        * changing heading on todo task form depending on $routeParams.id
        * New todo tasks wont have an id as yet
@@ -58,6 +59,11 @@
             $scope.error = response.message
           }
         })
+      }
+
+      $scope.handleSearch = function (query) {
+        var tasks = $scope.todoTasks
+        $scope.items = $filter('filter')(tasks, query)
       }
 
       function fetchAllTodoTasks() {
