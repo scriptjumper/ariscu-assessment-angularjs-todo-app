@@ -1,11 +1,8 @@
 ;(function () {
   angular.module('TodoApp').factory('AuthenticationService', [
     '$http',
-    '$cookieStore',
-    '$rootScope',
-    '$timeout',
     'baseUrl',
-    function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
+    function ($http, baseUrl) {
       var service = {}
 
       service.Login = function (data, callback) {

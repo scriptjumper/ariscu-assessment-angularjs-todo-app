@@ -1,11 +1,8 @@
 ;(function () {
   angular.module('TodoApp').factory('TodoTaskService', [
     '$http',
-    '$cookieStore',
-    '$rootScope',
-    '$timeout',
     'baseUrl',
-    function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
+    function ($http, baseUrl) {
       var service = {}
 
       service.FetchAllTodoTasks = function (callback) {
