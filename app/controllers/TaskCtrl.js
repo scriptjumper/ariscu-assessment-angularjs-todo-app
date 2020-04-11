@@ -94,7 +94,7 @@
        */
       $scope.handleCompleteTask = function (id) {
         var taskDetails = angular.copy(taskService.getTodoTaskById(Number(id)))
-        taskDetails.isComplete = c
+        taskDetails.isComplete = !taskDetails.isComplete
 
         taskService.UpdateTodoTask(taskDetails).then(
           function (response) {
