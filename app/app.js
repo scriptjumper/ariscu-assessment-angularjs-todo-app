@@ -1,6 +1,6 @@
 ;(function () {
   angular
-    .module('TodoApp', ['ngRoute', 'ngCookies'])
+    .module('TodoApp', ['ngRoute'])
     .config([
       '$routeProvider',
       function ($routeProvider) {
@@ -35,9 +35,7 @@
     .run([
       '$rootScope',
       '$location',
-      '$cookieStore',
-      '$http',
-      function ($rootScope, $location, $cookieStore, $http) {
+      function ($rootScope, $location) {
         $rootScope.backendUrl = 'http://localhost:8000/api'
 
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
