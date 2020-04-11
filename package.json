@@ -18,13 +18,14 @@
   },
   "homepage": "https://github.com/scriptjumper/angularjs-todo-app#readme",
   "dependencies": {
-    "angular": "^1.2.32",
-    "angular-cookies": "^1.2.13",
+    "angular": "^1.4.3",
+    "angular-cookies": "^1.4.3",
     "angular-font-awesome": "^3.1.2",
-    "angular-route": "^1.2.32",
+    "angular-resource": "^1.4.3",
+    "angular-route": "^1.4.3",
     "bootstrap": "^4.4.1",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.4.1",
+    "jquery": "3.3.x",
     "prettier": "^2.0.4"
   },
   "devDependencies": {
