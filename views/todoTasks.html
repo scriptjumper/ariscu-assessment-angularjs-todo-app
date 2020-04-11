@@ -39,7 +39,7 @@
           </span>
         </li>
       </ul>
-      <div ng-hide="todoTasks" class="alert alert-info">
+      <div ng-if="todoTasks.length === 0" class="alert alert-info">
         <span><i class="fa fa-info"></i> Oops seems like you dont have any To do tasks, to get start click <strong>New Task</strong> button</span>
       </div>
     </ul>
