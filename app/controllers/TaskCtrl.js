@@ -2,64 +2,146 @@
   angular.module('TodoApp').controller('TaskCtrl', [
     '$scope',
     '$routeParams',
-    'TodoTaskService',
     '$location',
     '$route',
-    function ($scope, $routeParams, TodoTaskService, $location, $route) {
-      /**
-       * changing heading on todo task form depending on $routeParams.id
-       * New todo tasks wont have an id as yet
-       */
-      $scope.formTitle = $routeParams.id ? 'Edit Task' : 'New Task'
-      $scope.todoTasks = []
-      $scope.query = ''
-      fetchAllTodoTasks()
+    'taskService',
+    function ($scope, $routeParams, $location, $route, taskService) {
+      // Doing pre controller setup
+      $scope.init = function () {
+        /**
+         * Checking if $routeParams.id exist
+         * if true
+         *      - change heading for editing to do tasks
+         * else
+         *      - change heading for creating to do tasks
+         */
+        $scope.formTitle = $routeParams.id ? 'Edit Task' : 'New Task'
 
-      if (!$routeParams.id) {
-        $scope.taskDetails = {}
-      } else {
-        // cloning object to avoid any changes made to model
-        $scope.taskDetails = angular.copy(TodoTaskService.getTodoTaskById(Number($routeParams.id)))
-      }
+        /**
+         * initializing to do tasks array
+         *    and
+         * query string for searching to do tasks
+         */
+        $scope.todoTasks = []
+        $scope.query = ''
 
-      $scope.handleTaskSave = function () {
+        fetchAllTodoTasks()
+
+        /**
+         * Checking if $routeParams.id exist
+         * if !$routeParams.id
+         *      - create empty to do tasks object
+         *      - setting property `isComplete` to false for new tasks
+         * else
+         *      - create a copy of the to do task with the `$routeParams.id`.
+         *
+         *        Using `angular.copy()` method to create a copy of task
+         *       * (should in some cases a user edits the task
+         *       * and click the cancel button the to do task will remain updated in state.)
+         *
+         *        Calls taskService.getTodoTaskById():
+         *          - passing $routeParams.id converted to number should it not be a number.
+         *          - returns an object for the task with same `$routeParams.id`
+         */
         if (!$routeParams.id) {
-          TodoTaskService.SaveTodoTask($scope.taskDetails, function (response) {
-            userIsAuthorised(response)
-          })
+          $scope.taskDetails = {
+            isComplete: false
+          }
         } else {
-          TodoTaskService.UpdateTodoTask($scope.taskDetails, function (response) {
-            userIsAuthorised(response)
-          })
+          $scope.taskDetails = angular.copy(taskService.getTodoTaskById(Number($routeParams.id)))
         }
       }
 
-      $scope.handleTaskDeletion = function (id) {
-        TodoTaskService.DeleteTodoTask(id, function (response) {
-          if (response.success) {
-            $location.path('/')
-            $route.reload()
-          } else {
-            $scope.error = response.message
-          }
-        })
+      /**
+       * $scope.handleTaskSave():
+       *
+       * Checking $routeParams.id to find out which view the user is on
+       * and calling the correct service to handle that request
+       */
+      $scope.handleTaskSave = function () {
+        if (!$routeParams.id) {
+          taskService.SaveTodoTask($scope.taskDetails).then(
+            function (response) {
+              handleSavedTask(response)
+            },
+            function (err) {
+              handleSavedTask(err)
+            }
+          )
+        } else {
+          taskService.UpdateTodoTask($scope.taskDetails).then(
+            function (response) {
+              handleSavedTask(response)
+            },
+            function (err) {
+              handleSavedTask(err)
+            }
+          )
+        }
       }
 
+      /**
+       * $scope.handleCompleteTask():
+       *
+       * Takes id of to do task that was marked as complete
+       *  - Calls taskService.getTodoTaskById() to get copy of updated task
+       *  - changing isComplete property to its opposite state using the `!` eg. !taskDetails.isComplete
+       *
+       * Calling taskService.UpdateTodoTask()
+       * to update task in database with newer changes
+       *
+       * Route back to all tasks view and fetch all tasks
+       */
       $scope.handleCompleteTask = function (id) {
-        var taskDetails = angular.copy(TodoTaskService.getTodoTaskById(Number(id)))
-        taskDetails.isComplete = !taskDetails.isComplete
+        var taskDetails = angular.copy(taskService.getTodoTaskById(Number(id)))
+        taskDetails.isComplete = c
 
-        TodoTaskService.UpdateTodoTask(taskDetails, function (response) {
-          if (response.success) {
-            // route to todo list screen and call DB for all todo tasks
-            $location.path('/')
-            fetchAllTodoTasks()
-          } else {
-            $scope.error = response.message
+        taskService.UpdateTodoTask(taskDetails).then(
+          function (response) {
+            if (response.success) {
+              $location.path('/')
+              fetchAllTodoTasks()
+            }
+          },
+          function (err) {
+            $scope.error = err.message
           }
-        })
+        )
       }
 
+      /**
+       * $scope.handleTaskDeletion():
+       *
+       * Takes param id int
+       *
+       * Calls taskService.DeleteTodoTask() service
+       *  - removes task with the same id from database
+       *  - refresh component fetching latest changes in database
+       */
+      $scope.handleTaskDeletion = function (id) {
+        taskService.DeleteTodoTask(id).then(
+          function (response) {
+            if (response.success) {
+              $location.path('/')
+              $route.reload()
+            }
+          },
+          function (err) {
+            $scope.error = err.message
+          }
+        )
+      }
+
+      /**
+       * inCompleteTasks():
+       *
+       * Takes param `tasks` => array
+       *
+       * Performs check using foreach loop
+       * for all tasks that are incomplete
+       * binds total number of incomplete tasks to `$scope.inCompleteTasks`
+       * $scope.inCompleteTasks will be used in the view
+       */
       function inCompleteTasks(tasks) {
         $scope.inCompleteTasks = 0
 
@@ -68,25 +150,51 @@
         })
       }
 
+      /**
+       * fetchAllTodoTasks():
+       *  Gets all to do task created by current user,
+       *  binds response to `$scope.todoTasks`.
+       *  Calls inCompleteTasks():
+       *    - Passes response data
+       *
+       * Should app not get any tasks data
+       * error message will display in view
+       */
       function fetchAllTodoTasks() {
-        TodoTaskService.FetchAllTodoTasks(function (response) {
-          if (response.success) {
-            $scope.todoTasks = response.data
-            inCompleteTasks(response.data)
-          } else {
-            $scope.error = response.message
+        taskService.FetchAllTodoTasks().then(
+          function (res) {
+            if (res.success) {
+              $scope.todoTasks = res.data
+              inCompleteTasks(res.data)
+            }
+          },
+          function (err) {
+            $scope.error = err.message
           }
-        })
+        )
       }
 
-      function userIsAuthorised(response) {
+      /**
+       * handleSavedTask():
+       *
+       * Takes response from request
+       *
+       * on success -> route to all tasks screen and call `fetchAllTodoTasks()` method
+       *
+       * on error -> keep user on page and display error
+       */
+      function handleSavedTask(response) {
         if (response.success) {
           $location.path('/')
           fetchAllTodoTasks()
+          delete $scope.error
         } else {
           $scope.error = response.message
         }
       }
+
+      // calling `$scope.init()` function to setup controller config
+      $scope.init()
     }
   ])
 })()

@@ -1,179 +1,209 @@
 ;(function () {
-  angular.module('TodoApp').factory('AuthenticationService', [
+  angular.module('TodoApp').factory('authenticationService', [
     '$http',
-    'baseUrl',
-    function ($http, baseUrl) {
-      var service = {}
+    '$q',
+    '$rootScope',
+    function ($http, $q, $rootScope) {
+      var authenticationService = this
 
-      service.Login = function (data, callback) {
-        var res = {}
-        var onSuccess = function (response, status, headers, config) {
-          if (status === 200) {
-            res.success = true
-            res.data = response
-          }
-          return callback(res)
-        }
-
-        var onError = function (response, status, headers, config) {
-          if (status === 401) {
-            res.message = response.error
-          } else {
-            res.error = 'Unable to find user, Please check if your email and password is entered correctly.'
-          }
-
-          return callback(res)
-        }
-
-        $http
-          .post(baseUrl + '/login', { email: data.email, password: data.password })
-          .success(onSuccess)
-          .error(onError)
-      }
-
-      service.Register = function (data, callback) {
-        var res = {}
-        var onSuccess = function (response, status, headers, config) {
-          if (status === 200) {
-            res.success = true
-            res.data = response
-          }
-          return callback(res)
-        }
-
-        var onError = function (response, status, headers, config) {
-          switch (status) {
-            case 401:
-              res.message = response.message
-              break
-            case 500:
-              if (response.message.includes('duplicate key value violates unique constraint'))
-                res.message = 'Oops, Email enter is already in use by another account.'
-              else res.message = 'Server seems to be offline'
-              break
-
-            default:
-              break
-          }
-
-          return callback(res)
-        }
-
-        $http
-          .post(baseUrl + '/register', {
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            password: data.password
-          })
-          .success(onSuccess)
-          .error(onError)
-      }
-
-      service.getUserDetails = function (callback) {
-        var authentication = service.getAuthenticationHeaders(),
+      /**
+       * authenticationService.Login():
+       * Gets a JWT token from the details passed in `user`
+       *
+       * Checks status and formats response sent to controller
+       */
+      authenticationService.Login = function (user) {
+        var defer = $q.defer(),
           res = {}
 
-        var req = {
-          method: 'GET',
-          url: baseUrl + '/user',
-          headers: {
-            Authorization: `${authentication.token_type} ${authentication.access_token}`
-          }
-        }
-
-        $http(req).then(
-          function (response) {
-            if (response.status === 200) {
+        $http
+          .post($rootScope.backendUrl + '/login', user)
+          .success(function (response, status) {
+            if (status === 200) {
               res.success = true
-              res.data = response.data || []
+              res.data = response
+            }
+
+            defer.resolve(res)
+          })
+          .error(function (err, status) {
+            if (status === 401) {
+              res.message = err.message
+            } else {
+              res.error = 'Unable to find user, Please check if your email and password is entered correctly.'
+            }
+
+            defer.reject(res)
+          })
+
+        return defer.promise
+      }
+
+      /**
+       * authenticationService.Register():
+       * Create a JWT token from the details passed in `user`
+       *
+       * Checks status and formats response sent to controller
+       *
+       * .error():
+       *    Handling and formatting errors using switch statement
+       *    for errors thrown by the database
+       */
+      authenticationService.Register = function (user) {
+        var defer = $q.defer(),
+          res = {}
+
+        $http
+          .post($rootScope.backendUrl + '/register', user)
+          .success(function (response, status) {
+            if (status === 200) {
+              res.success = true
+              res.data = response
+            }
+
+            defer.resolve(res)
+          })
+          .error(function (err, status) {
+            // checking status and formatting error message to be displayed
+            switch (status) {
+              case 401:
+                res.message = err.message
+                break
+              case 500:
+                if (err.message.includes('duplicate key value violates unique constraint'))
+                  res.message = 'Oops, Email enter is already in use by another account.'
+                else res.message = 'Server seems to be offline'
+                break
+
+              default:
+                break
+            }
+
+            defer.reject(res)
+          })
+
+        return defer.promise
+      }
+
+      /**
+       * authenticationService.getUserDetails():
+       * Uses JWT to get current users details.
+       *
+       * Checks status and formats response sent to controller
+       */
+      authenticationService.getUserDetails = function () {
+        var defer = $q.defer(),
+          res = {},
+          authentication = authenticationService.getAuthenticationHeaders()
+
+        $http
+          .get($rootScope.backendUrl + '/user', {
+            headers: {
+              Authorization: `${authentication.token_type} ${authentication.access_token}`
+            }
+          })
+          .success(function (response, status) {
+            if (status === 200) {
+              res.success = true
+              res.data = response || []
 
               localStorage.setItem('currentUser', JSON.stringify(res.data))
             }
 
-            return callback(res)
-          },
-          function (response) {
-            callback(response)
-          }
-        )
+            defer.resolve(res)
+          })
+          .error(function (err) {
+            defer.reject(err)
+          })
+
+        return defer.promise
       }
 
-      service.UpdateCurrentUsersDetails = function (data, callback) {
-        var authentication = service.getAuthenticationHeaders(),
-          res = {}
+      /**
+       * authenticationService.UpdateCurrentUsersDetails():
+       *
+       * Takes user object
+       * Updates users details in the database
+       */
+      authenticationService.UpdateCurrentUsersDetails = function (user) {
+        var defer = $q.defer(),
+          res = {},
+          authentication = authenticationService.getAuthenticationHeaders()
 
-        var req = {
-          method: 'PUT',
-          url: baseUrl + '/user/update',
-          headers: {
-            Authorization: `${authentication.token_type} ${authentication.access_token}`
-          },
-          data: {
-            id: data.id,
-            firstName: data.firstName,
-            lastName: data.lastName
-          }
-        }
-
-        $http(req).then(
-          function (response) {
-            if (response.status === 200) {
+        $http
+          .put($rootScope.backendUrl + '/user/update', user, {
+            headers: {
+              Authorization: `${authentication.token_type} ${authentication.access_token}`
+            }
+          })
+          .success(function (response, status) {
+            if (status === 200) {
               res.success = true
-              res.message = response.data.message
+              res.message = response.message
             }
 
-            return callback(res)
-          },
-          function (response) {
-            callback(response.data)
-          }
-        )
+            defer.resolve(res)
+          })
+          .error(function (err) {
+            defer.reject(err)
+          })
+
+        return defer.promise
       }
 
-      service.changeUserAvatar = function (data, callback) {
-        var authentication = service.getAuthenticationHeaders(),
+      authenticationService.changeUserAvatar = function (avatar) {
+        var defer = $q.defer(),
+          res = {},
+          authentication = authenticationService.getAuthenticationHeaders(),
           user = JSON.parse(localStorage.getItem('currentUser'))
-        res = {}
 
-        var req = {
-          method: 'POST',
-          url: baseUrl + '/user/avatar/new',
-          headers: {
-            Authorization: `${authentication.token_type} ${authentication.access_token}`
-          },
-          data: {
-            id: user.id,
-            avatar: data
-          }
-        }
-
-        $http(req).then(
-          function (response) {
-            if (response.status === 200) {
+        $http
+          .post(
+            $rootScope.backendUrl + '/user/avatar/new',
+            {
+              id: user.id,
+              avatar: avatar
+            },
+            {
+              headers: {
+                Authorization: `${authentication.token_type} ${authentication.access_token}`
+              }
+            }
+          )
+          .success(function (response, status) {
+            if (status === 200) {
               res.success = true
             }
 
-            return callback(res)
-          },
-          function (response) {
-            callback(response.data)
-          }
-        )
+            defer.resolve(res)
+          })
+          .error(function (err) {
+            defer.reject(err)
+          })
+
+        return defer.promise
       }
 
-      service.SetCredentials = function (authdata) {
+      /**
+       * authenticationService.SetCredentials():
+       *
+       * Takes in the response recieved from the request
+       * and sets JWT details to local storage
+       */
+      authenticationService.SetCredentials = function (authdata) {
         localStorage.setItem('isAuthenticated', JSON.stringify(authdata))
       }
 
-      service.getAuthenticationHeaders = function () {
-        // get users authentication from localstorage
-        var authentication = JSON.parse(localStorage.getItem('isAuthenticated'))
-
-        return authentication
+      /**
+       * authenticationService.getAuthenticationHeaders():
+       *
+       * Gets JWT from localStorage and return a json object
+       */
+      authenticationService.getAuthenticationHeaders = function () {
+        return JSON.parse(localStorage.getItem('isAuthenticated'))
       }
 
-      return service
+      return authenticationService
     }
   ])
 })()
