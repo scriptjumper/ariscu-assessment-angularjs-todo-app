@@ -1,121 +1,153 @@
 ;(function () {
-  angular.module('TodoApp').factory('TodoTaskService', [
+  angular.module('TodoApp').factory('taskService', [
     '$http',
-    'baseUrl',
-    function ($http, baseUrl) {
-      var service = {}
+    '$q',
+    '$rootScope',
+    'authenticationService',
+    function ($http, $q, $rootScope, authenticationService) {
+      var taskService = this
 
-      service.FetchAllTodoTasks = function (callback) {
-        var authentication = service.getAuthenticationHeaders(),
-          res = {}
+      /**
+       * taskService.SaveTodoTask():
+       *
+       * Creates new task for current user.
+       */
+      taskService.SaveTodoTask = function (task) {
+        var authentication = authenticationService.getAuthenticationHeaders(),
+          res = {},
+          defer = $q.defer()
 
-        var req = {
-          method: 'GET',
-          url: baseUrl + '/tasks',
-          headers: {
-            Authorization: `${authentication.token_type} ${authentication.access_token}`
-          }
-        }
-
-        $http(req).then(
-          function (response) {
-            if (response.status === 200) {
+        $http
+          .post($rootScope.backendUrl + '/tasks', task, {
+            headers: {
+              Authorization: `${authentication.token_type} ${authentication.access_token}`
+            }
+          })
+          .success(function (response, status) {
+            if (status === 201) {
               res.success = true
-              res.data = response.data.data || []
+            }
+
+            defer.resolve(res)
+          })
+          .error(function (err) {
+            defer.reject(err)
+          })
+
+        return defer.promise
+      }
+
+      /**
+       * taskService.UpdateTodoTask():
+       *
+       * Takes `task` param with details about existing task
+       *
+       * perform a put method that will update the to do task in the database
+       *
+       * * also used when user marks task as complete or incomplete
+       */
+      taskService.UpdateTodoTask = function (task) {
+        var authentication = authenticationService.getAuthenticationHeaders(),
+          res = {},
+          defer = $q.defer()
+
+        $http
+          .put($rootScope.backendUrl + `/tasks/${task.id}`, task, {
+            headers: {
+              Authorization: `${authentication.token_type} ${authentication.access_token}`
+            }
+          })
+          .success(function (response, status) {
+            if (status === 200) {
+              res.success = true
+            }
+
+            defer.resolve(res)
+          })
+          .error(function (err) {
+            if (err.message.includes('No query results for model')) res.message = 'Oops, failed to update task.'
+
+            defer.reject(res)
+          })
+
+        return defer.promise
+      }
+
+      /**
+       * taskService.DeleteTodoTask():
+       *
+       * Takes param taskId int
+       *  - removes task with the same taskId from database
+       */
+      taskService.DeleteTodoTask = function (taskId) {
+        var authentication = authenticationService.getAuthenticationHeaders(),
+          res = {},
+          defer = $q.defer()
+
+        $http
+          .delete($rootScope.backendUrl + `/tasks/${taskId}`, {
+            headers: {
+              Authorization: `${authentication.token_type} ${authentication.access_token}`
+            }
+          })
+          .success(function (response, status) {
+            if (status === 204) {
+              res.success = true
+            }
+
+            defer.resolve(res)
+          })
+          .error(function (err) {
+            defer.reject(err)
+          })
+
+        return defer.promise
+      }
+
+      /**
+       * taskService.FetchAllTodoTasks():
+       *
+       * Fetches all to do tasks for current user.
+       * on success -> setting fetched to do task data to sessionStorage
+       * on error -> sends error message from backend to control to be displayed in the view
+       */
+      taskService.FetchAllTodoTasks = function () {
+        var authentication = authenticationService.getAuthenticationHeaders(),
+          res = {},
+          defer = $q.defer()
+
+        $http
+          .get($rootScope.backendUrl + '/tasks', {
+            headers: {
+              Authorization: `${authentication.token_type} ${authentication.access_token}`
+            }
+          })
+          .success(function (response, status) {
+            if (status === 200) {
+              res.success = true
+              res.data = response.data || []
             }
 
             sessionStorage.setItem('todoTasks', JSON.stringify(res.data))
-            return callback(res)
-          },
-          function (response) {
-            callback(response)
-          }
-        )
+            defer.resolve(res)
+          })
+          .error(function (err) {
+            defer.reject(err)
+          })
+
+        return defer.promise
       }
 
-      service.SaveTodoTask = function (data, callback) {
-        var authentication = service.getAuthenticationHeaders(),
-          res = {}
-
-        var req = {
-          method: 'POST',
-          url: baseUrl + '/tasks',
-          headers: {
-            Authorization: `${authentication.token_type} ${authentication.access_token}`
-          },
-          data: { title: data.title, isComplete: false }
-        }
-
-        $http(req).then(
-          function (response) {
-            if (response.status === 201) {
-              res.success = true
-            }
-            return callback(res)
-          },
-          function (response) {
-            callback(response)
-          }
-        )
-      }
-
-      service.UpdateTodoTask = function (data, callback) {
-        var authentication = service.getAuthenticationHeaders(),
-          res = {}
-
-        var req = {
-          method: 'PUT',
-          url: baseUrl + `/tasks/${data.id}`,
-          headers: {
-            Authorization: `${authentication.token_type} ${authentication.access_token}`
-          },
-          data: {
-            title: data.title,
-            isComplete: data.isComplete
-          }
-        }
-
-        $http(req).then(
-          function (response) {
-            if (response.status === 200) {
-              res.success = true
-            }
-
-            return callback(res)
-          },
-          function (response) {
-            callback(response)
-          }
-        )
-      }
-
-      service.DeleteTodoTask = function (id, callback) {
-        var authentication = service.getAuthenticationHeaders(),
-          res = {}
-
-        var req = {
-          method: 'DELETE',
-          url: baseUrl + `/tasks/${id}`,
-          headers: {
-            Authorization: `${authentication.token_type} ${authentication.access_token}`
-          }
-        }
-
-        $http(req).then(
-          function (response) {
-            if (response.status === 204) {
-              res.success = true
-            }
-
-            return callback(res)
-          },
-          function (response) {
-            callback(response)
-          }
-        )
-      }
-
-      service.getTodoTaskById = function (id) {
+      /**
+       * service.getTodoTaskById():
+       *
+       * Takes id from routeParam
+       * gets all to do task data from sessionStorage
+       *
+       * Perform a check for matching id's
+       * returns `todoTaskObj` with matching id
+       */
+      taskService.getTodoTaskById = function (id) {
         var todoTasks = JSON.parse(sessionStorage.getItem('todoTasks')) || [],
           todoTask = {}
 
@@ -129,14 +161,7 @@
         return todoTask
       }
 
-      service.getAuthenticationHeaders = function () {
-        // get users authentication from localstorage
-        var authentication = JSON.parse(localStorage.getItem('isAuthenticated'))
-
-        return authentication
-      }
-
-      return service
+      return taskService
     }
   ])
 })()

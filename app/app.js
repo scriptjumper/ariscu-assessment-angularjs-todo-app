@@ -3,8 +3,7 @@
     .module('TodoApp', ['ngRoute', 'ngCookies'])
     .config([
       '$routeProvider',
-      '$locationProvider',
-      function ($routeProvider, $locationProvider) {
+      function ($routeProvider) {
         $routeProvider
           .when('/', {
             controller: 'TaskCtrl',
@@ -39,6 +38,8 @@
       '$cookieStore',
       '$http',
       function ($rootScope, $location, $cookieStore, $http) {
+        $rootScope.backendUrl = 'http://localhost:8000/api'
+
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
           /**
            * ! For production
@@ -79,5 +80,4 @@
         })
       }
     ])
-    .constant('baseUrl', 'http://localhost:8000/api')
 })()
