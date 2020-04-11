@@ -18,3 +18,12 @@
     </form>
   </div>
 </div>
+
+<div ng-show="error" id="message" style="position: relative; margin-top: 5em;">
+  <div style="padding: 5px;">
+    <span class="fa fa-danger"></span>
+    <div id="inner-message" class="alert alert-danger">
+      {{error}}
+    </div>
+  </div>
+</div>
