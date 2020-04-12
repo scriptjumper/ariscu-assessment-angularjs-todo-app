@@ -22,6 +22,10 @@
         $rootScope.$on('$locationChangeStart', function (event, next, current) {
           /**
            * ! For production - make use of a authenticate method in the backend
+           *
+           * Checking the path a user is allowed to go to based their authentication
+           * should a user got to a route that's not defined the will get a 404 page
+           * with a button to root the to the home page ("/")
            */
           var path = $location.path()
           var userIsAuthenticated = localStorage.getItem('isAuthenticated') || false
