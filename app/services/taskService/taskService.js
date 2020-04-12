@@ -161,6 +161,21 @@
         return todoTask
       }
 
+      /**
+       * taskService.getTask():
+       *
+       * Takes the id of the task and returns that tasks object
+       */
+      taskService.getTask = function (id) {
+        var tasksPromise = $q.resolve(JSON.parse(sessionStorage.getItem('todoTasks')))
+
+        return tasksPromise.then(function (tasks) {
+          for (var i = 0; i < tasks.length; i++) {
+            if (tasks[i].id === id) return tasks[i]
+          }
+        })
+      }
+
       return taskService
     }
   ])

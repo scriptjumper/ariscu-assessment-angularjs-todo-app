@@ -3,8 +3,11 @@
     '$http',
     '$q',
     '$rootScope',
-    function ($http, $q, $rootScope) {
+    '$window',
+    function ($http, $q, $rootScope, $window) {
       var authenticationService = this
+
+      authenticationService.loggedIn = false
 
       /**
        * authenticationService.Login():
@@ -22,6 +25,7 @@
             if (status === 200) {
               res.success = true
               res.data = response
+              authenticationService.loggedIn = true
             }
 
             defer.resolve(res)
@@ -30,7 +34,7 @@
             if (status === 401) {
               res.message = err.message
             } else {
-              res.error = 'Unable to find user, Please check if your email and password is entered correctly.'
+              res.message = 'Unable to find user, Please check if your email and password is entered correctly.'
             }
 
             defer.reject(res)
@@ -59,6 +63,7 @@
             if (status === 200) {
               res.success = true
               res.data = response
+              authenticationService.loggedIn = true
             }
 
             defer.resolve(res)
@@ -185,6 +190,16 @@
       }
 
       /**
+       * authenticationService.Logout():
+       * clear all items set in localStorage and sessionStorage
+       */
+      authenticationService.Logout = function () {
+        $window.localStorage.clear()
+        $window.sessionStorage.clear()
+        authenticationService.loggedIn = false
+      }
+
+      /**
        * authenticationService.SetCredentials():
        *
        * Takes in the response recieved from the request
@@ -202,6 +217,12 @@
       authenticationService.getAuthenticationHeaders = function () {
         return JSON.parse(localStorage.getItem('isAuthenticated'))
       }
+
+      /**
+       * Checking if user has a JWT token
+       */
+      var isAuthenticated = authenticationService.getAuthenticationHeaders() || undefined
+      if (isAuthenticated) authenticationService.loggedIn = true
 
       return authenticationService
     }
