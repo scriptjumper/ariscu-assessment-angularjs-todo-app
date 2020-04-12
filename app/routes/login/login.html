@@ -10,45 +10,61 @@
   <div class="row">
     <div class="col-md-6 mx-auto">
       <div class="myform form">
-        <form name="form" ng-submit="handleSubmit()" role="form">
-          <!-- only for register form -->
-          <div ng-show="showRegisterFields" class="form-group">
-            <input type="text" name="firstName" id="firstName" class="form-control" ng-model="userFormDetails.firstName" placeholder="First Name" />
-          </div>
-          <div ng-show="showRegisterFields" class="form-group">
-            <input type="text" name="lastName" id="lastName" class="form-control" ng-model="userFormDetails.lastName" placeholder="Last Name" />
-          </div>
-          <!-- only for register form -->
-
+        <form name="form" ng-submit="$ctrl.handleLogin()" role="form">
           <div class="form-group">
-            <input type="email" name="email" id="email" class="form-control" ng-model="userFormDetails.email" placeholder="Email" required />
+            <input
+              type="email"
+              name="email"
+              id="email"
+              class="form-control"
+              ng-model="$ctrl.loginFormDetails.email"
+              placeholder="Email"
+              required
+            />
             <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Email is required</span>
           </div>
           <div class="form-group">
-            <input type="password" name="password" id="password" class="form-control" ng-model="userFormDetails.password" placeholder="Password" required />
-            <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              class="form-control"
+              ng-model="$ctrl.loginFormDetails.password"
+              placeholder="Password"
+              required
+            />
+            <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block"
+              >Password is required</span
+            >
           </div>
           <div class="text-center">
-            <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-block send-button tx-tfm">
-              {{formDetails.formBtnName}}
+            <button
+              type="submit"
+              ng-disabled="form.$invalid || $ctrl.dataLoading"
+              class="btn btn-block send-button tx-tfm"
+            >
+              Login
               <img
-                ng-if="dataLoading"
+                ng-if="$ctrl.dataLoading"
                 src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
               />
             </button>
           </div>
 
-          <p class="small mt-3">{{formDetails.formMessage}} <a ng-href="{{formDetails.formLink}}" class="ps-hero__content__link">here</a></p>
+          <p class="small mt-3">
+            Are you new? why don't you create an account
+            <a ng-link="['/Register']" class="ps-hero__content__link">here</a>
+          </p>
         </form>
       </div>
 
       <br />
 
-      <div ng-show="error" id="message" style="position: relative; margin-top: 5em;">
+      <div ng-show="$ctrl.error" id="message" style="position: relative; margin-top: 5em;">
         <div style="padding: 5px;">
           <span class="fa fa-danger"></span>
           <div id="inner-message" class="alert alert-danger">
-            {{error}}
+            {{$ctrl.error}}
           </div>
         </div>
       </div>
