@@ -17,6 +17,7 @@ import '../app/routes/profile/profileCtrl.js'
 import '../app/routes/tasks/tasksCtrl.js'
 import '../app/routes/login/loginCtrl.js'
 import '../app/routes/register/registerCtrl.js'
+import '../app/routes/notfound/notfoundCtrl.js'
 
 // Services
 import '../app/services/authenticationService/authenticationService.js'
