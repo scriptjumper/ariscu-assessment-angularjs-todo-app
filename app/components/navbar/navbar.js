@@ -35,7 +35,7 @@ angular.module('app.navbar', []).component('navBar', {
         var path = $location.path()
         if (path !== '/login' || path !== '/register') {
           $ctrl.Auth = authenticationService
-          getUserDetails()
+          if ($ctrl.Auth.loggedIn) getUserDetails()
         }
       }
 

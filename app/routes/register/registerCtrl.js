@@ -3,8 +3,9 @@ angular.module('app.register', []).component('register', {
   controllerAs: '$ctrl',
   controller: [
     '$location',
+    '$window',
     'authenticationService',
-    function ($location, authenticationService) {
+    function ($location, $window, authenticationService) {
       var $ctrl = this
 
       // initializing the authentication form object
@@ -30,10 +31,9 @@ angular.module('app.register', []).component('register', {
       function isUserAuthenticated(response) {
         if (response.success) {
           authenticationService.SetCredentials(response.data)
-          // $rootRouter.navigate(['/Tasks'])
           $location.path(['/tasks'])
-          // $window.location.reload()
           delete $ctrl.error
+          $window.location.reload()
         } else {
           $ctrl.error = response.message || response.error
           $ctrl.dataLoading = false
