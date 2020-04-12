@@ -81,19 +81,23 @@ Update the dependencies in the `package.json` with the following code:
 ...
 
 "dependencies": {
-    "angular-route": "^1.2.32",
-    "bootstrap": "^4.4.1",
-    "jquery": "^3.4.1",
-    "prettier": "^2.0.2"
-  },
-
-...
+  "@angular/router": "^0.2.0",
+  "angular": "1.5.6",
+  "angular-cookies": "1.5.6",
+  "angular-font-awesome": "^3.1.2",
+  "angular-resource": "1.5.6",
+  "angular-route": "1.5.6",
+  "bootstrap": "^4.4.1",
+  "font-awesome": "^4.7.0",
+  "jquery": "3.3.x",
+  "prettier": "^2.0.4"
+}
 ```
 
 then we running the command below:
 
 ```
-$ npm i && npm ci
+$ npm i
 ```
 
 Once that’s done installing, let’s run the command below to create files for our `prettier` package and a `gitignore` file to handle files we do not want to add to github:
@@ -116,7 +120,7 @@ Open the `.prettierrc` file and update add the code below:
 }
 ```
 
-Open the `.gitignore` file and update add the code below:
+Open the `.gitignore` file and add the code below:
 
 ```
 # Logs
@@ -172,23 +176,35 @@ Let’s first create our main file:
 
 In the main directory create `index.html` and add the code below:
 
+In the head tag:
+
 ```
-<!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="TodoApp">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Todo App</title>
 
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="node_modules/font-awesome/css/font-awesome.css" />
 
+    <link rel="stylesheet" type="text/css" href="app.css" />
+
+    <base href="/" />
   </head>
-  <body>
-    <h1>Hello World!</h1>
 
-    <!-- Libs -->
-    <script src="node_modules/angular/angular.js"></script>
-    <script src="node_modules/@uirouter/angularjs/release/angular-ui-router.js"></script>
+  ...
+```
+
+In the body:
+
+```
+  ...
+  <body>
+    <app></app>
+
+    <script type="module" src="dist/dependencies.js"></script>
   </body>
 </html>
 ```
@@ -217,90 +233,87 @@ $ npm run dev
 
 Once the above command is running, in your browser of choice go to `http://localhost:3000` (by default `lite-server` will open a new tab in your default browser that is opened to `http://localhost:3000`).
 
-## Creating First View and Controller
+## Creating First View and Component
 
-### Setting Up First Route
+### Setup App with ngComponentRouter
 
-In the `app/` directory, we will be creating `app.js` file with the code below:
-
-```
-;(function () {
-  angular.module('TodoApp', ['ngRoute', 'ngCookies']).config([
-    '$routeProvider',
-    function ($routeProvider) {
-      $routeProvider
-        .when('/', {
-          controller: 'TaskCtrl',
-          templateUrl: 'views/todoTasks.html'
-        })
-        .otherwise({ redirectTo: '/' })
-    }
-  ])
-})()
-```
-
-Next, we create a view and controller file for out route.
-
-In the `app/controllers` directory, we will be creating `TaskCtrl.js` file with the code below:
+In the `app/components/app/` directory, we will be creating `app.js` file with the code below:
 
 ```
 ;(function () {
-  angular.module('TodoApp').controller('TaskCtrl', [
-    '$scope', function ($scope) {
-      ...
-    }
-  ])
+  angular.module('todoApp', ['ngComponentRouter'])
 })()
 ```
 
-Then, In the `views/` directory, we will be creating `tasks.html` file with some placeholder code:
+Since we will be using lite-server to run the app, we add the code below beneath `angular.module` in `app.js`:
 
 ```
-<h1>Hello Form tasks.html</h1>
+  ...
+
+  .config(function($locationProvider) {
+    $locationProvider.html5Mode(true);
+  })
+
+  ...
 ```
 
-Finally we change the `body` in our `index.html` file to start using AngularJS.
-We do this with the code below:
+Configure the top level routed `App` Component.
 
 ```
-<body>
-  <div ng-app="TodoApp">
-    <div class="container">
-      <div ng-view></div>
-    </div>
-  </div>
+  ...
 
-...
+  .value('$routerRootComponent', 'app')
+
+  ...
 ```
 
-### Setting Up Login Route
+Finally we can add our component:
+
+```
+  ...
+
+  .component('app', {
+    template: '<h1>Hello World!</h1>'
+  });
+
+  ...
+```
+
+Add a `<base>` element to the head of our index.html. Remember that we have chosen to use HTML5 mode for the `$location` service.
+
+```
+  ...
+  <base href="/">
+  </head>
+  ...
+```
+
+Bootstrap with AngularJS.
+
+```
+<body ng-app="app">
+  <h1 class="title">Component Router</h1>
+  <app></app>
+</body>
+```
+
+....
+
+### Setting Up Login and Register Route
 
 We'll start in the `app.js`, add the code below to setup the login route:
 
 ```
-...
-.when('/login', {
-  controller: 'AuthCtrl',
-  templateUrl: 'views/auth.html'
-})
-...
+{ path: '/login', component: 'login', name: 'Login' }
 ```
 
-Next, we create the `auth.html` view file in `views/` with a basic login form code:
+Next, we create the `login.html` view file in `app/routes/login/` with a basic login form code:
 
 ```
 <div class="container">
-  <div class="col-md-6 mx-auto text-center">
-    <div class="header-title">
-      <h1 class="wv-heading--title">
-        Check out — it’s free!
-      </h1>
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-6 mx-auto">
-      <div class="myform form">
+  ...
+
         <form name="form" role="form">
           <div class="form-group">
             <input type="email" name="email" id="email" class="form-control" placeholder="Email" required />
@@ -314,452 +327,117 @@ Next, we create the `auth.html` view file in `views/` with a basic login form co
 
           <p class="small mt-3">Are you new? why don't you create an account <a href="#" class="ps-hero__content__link">here</a>.</p>
         </form>
-      </div>
-    </div>
-  </div>
-</div>
+
+  ...
 ```
 
-In the `app/controllers` directory, we will be creating `AuthCtrl.js` file with the code below:
+In the `app/routes/login/` directory, we will be creating `login.js` file with the code below:
 
 ```
 ;(function () {
-  angular.module('TodoApp').controller('AuthCtrl', [
-    '$scope', function ($scope) {
+  angular.module('app.login', []).component('login', {
+    templateUrl: 'app/routes/login/login.html',
+    controllerAs: '$ctrl',
+    controller: [function() {}
       ...
-    }
-  ])
-})()
-```
-
-In the main directory we create our custom stylings, create the `app.css` file, with the code below:
 
 ```
-body {
-  background-color: darkgray;
-}
 
-.send-button {
-  background: #54c7c3;
-  width: 100%;
-  font-weight: 600;
-  color: #fff;
-  padding: 8px 25px;
-}
+In the main directory we create our custom styles, create the `app.css` file.
+Code is available <a href='https://github.com/scriptjumper/angularjs-todo-app/blob/master/app.css'>here</a>
 
-p.small {
-  font-size: 100%;
-}
+We do the same the process
 
-.g-button {
-  color: #fff !important;
-  border: 1px solid #ea4335;
-  background: #ea4335 !important;
-  width: 100%;
-  font-weight: 600;
-  color: #fff;
-  padding: 8px 25px;
-}
-
-.my-input {
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-  cursor: text;
-  padding: 8px 10px;
-  transition: border 0.1s linear;
-}
-
-.header-title {
-  margin: 5rem 0;
-}
-
-h1 {
-  font-size: 31px;
-  line-height: 40px;
-  font-weight: 600;
-  color: #4c5357;
-}
-
-h2 {
-  color: #5e8396;
-  font-size: 21px;
-  line-height: 32px;
-  font-weight: 400;
-}
-
-.login-or {
-  position: relative;
-  color: #aaa;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-
-.span-or {
-  display: block;
-  position: absolute;
-  left: 50%;
-  top: -2px;
-  margin-left: -25px;
-  background-color: #fff;
-  width: 50px;
-  text-align: center;
-}
-
-.hr-or {
-  height: 1px;
-  margin-top: 0px !important;
-  margin-bottom: 0px !important;
-}
-
-@media screen and (max-width: 480px) {
-  h1 {
-    font-size: 26px;
-  }
-  h2 {
-    font-size: 20px;
-  }
-}
-```
-
-### Setting Up Register Route
-
-We'll start in the `app.js`, add the code below to setup the login route:
+In the html file for the register view, we add 2 extra inputs:
 
 ```
 ...
-.when('/register', {
-  controller: 'AuthCtrl',
-  templateUrl: 'views/auth.html'
-})
+
+<div class="form-group">
+  <input
+    type="text"
+    name="firstName"
+    id="firstName"
+    class="form-control"
+    ng-model="$ctrl.registerFormDetails.firstName"
+    placeholder="First Name"
+  />
+</div>
+
+<div class="form-group">
+  <input
+    type="text"
+    name="lastName"
+    id="lastName"
+    class="form-control"
+    ng-model="$ctrl.registerFormDetails.lastName"
+    placeholder="Last Name"
+  />
+</div>
+
 ...
 ```
 
-Next, we wont be creating a separate view for the registration form instead we will make the `views/auth.html` dynamic.
-We do this with the code below:
+## Linking all our scripts
+
+In the main directory we create a file to contain all our scripts called `dist/dependencies.js`
 
 ```
-<div class="row">
-    <div class="col-md-6 mx-auto">
-      <div class="myform form">
-        <form name="form" ng-submit="submit()" role="form">
-          <!-- only for regist form -->
-          <div ng-if="showLoginForm === false" class="form-group">
-            <input type="text" name="firstName" id="firstName" class="form-control" ng-model="firstName" placeholder="First Name" />
-          </div>
-
-          <div ng-if="showLoginForm === false" class="form-group">
-            <input type="text" name="lastName" id="lastName" class="form-control" ng-model="lastName" placeholder="Last Name" />
-          </div>
-          <!-- only for regist form -->
-
-          <div class="form-group">
-            <input type="email" name="email" id="email" class="form-control" placeholder="Email" required />
-            <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Email is required</span>
-          </div>
-
-          <div class="form-group">
-            <input type="password" name="password" id="password" class="form-control" placeholder="Password" required />
-            <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
-          </div>
-
-          <div class="text-center">
-            <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-block send-button tx-tfm">{{formBtnName}}</button>
-            <img
-              ng-if="dataLoading"
-              src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
-            />
-          </div>
-
-          <p class="small mt-3">{{formMessage}} <a ng-href="{{formLink}}" class="ps-hero__content__link">here</a></p>
-        </form>
-      </div>
-      <br />
-      <div ng-show="error" class="alert alert-danger">{{error}}</div>
-    </div>
-  </div>
-```
-
-In the `app/controllers` directory, we update the `AuthCtrl.js` file with the code below:
+// Libs
+import '../../node_modules/jquery/dist/jquery.min.js'
+import '../../node_modules/angular/angular.js'
+import '../../node_modules/angular-route/angular-route.js'
+import '../../node_modules/angular-cookies/angular-cookies.js'
+import '../../node_modules/bootstrap/dist/js/bootstrap.js'
+import '../../node_modules/@angular/router/angular1/angular_1_router.js'
+...
 
 ```
-;(function () {
-  angular.module('TodoApp').controller('AuthCtrl', [
-    '$scope',
-    '$location',
-    function ($scope, $location) {
-      constructor()
 
-      $scope.submit = function () {
-        $scope.dataLoading = true
-        if ($scope.showLoginForm) {
-          console.log('Handle User login')
-          $scope.dataLoading = false
-        } else {
-          console.log('Handle User registration')
-          $scope.dataLoading = false
-        }
-      }
-
-      function constructor() {
-        // check path to see which form to display
-        $scope.showLoginForm = true
-        $scope.formMessage = "Are you new? why don't you create an account "
-        $scope.formLink = '/register'
-        $scope.formBtnName = 'Login'
-        var path = $location.path()
-        if (path === '/register') {
-          $scope.showLoginForm = false
-          $scope.formMessage = 'Already have an account? just login '
-          $scope.formLink = '/login'
-          $scope.formBtnName = 'Register'
-        }
-      }
-    }
-  ])
-})()
-```
-
-#### Templating Dynamic Auth Form
-
-Open `AuthCtrl.js` and add the code below above the `constructor()` function:
+Then, in the `index.html` we import that dependency file
 
 ```
-// templating the text to display for both the login and register form
-var loginFormDetails = {
-    formMessage: "Are you new? why don't you create an account ",
-    formLink: '/register',
-    formBtnName: 'Login'
-  },
-  registerFormDetails = {
-    formMessage: 'Already have an account? just login ',
-    formLink: '/login',
-    formBtnName: 'Register'
-  }
+<script type="module" src="dist/dependencies.js"></script>
 ```
 
-In the `contructor()` function we replace all the code there with:
-
-```
-function constructor() {
-  // check path to see which form to display
-  $scope.showRegisterFields = false
-  $scope.formDetails = loginFormDetails
-  var path = $location.path()
-  if (path === '/register') {
-    $scope.showRegisterFields = true
-    $scope.formDetails = registerFormDetails
-  }
-}
-```
-
-Now we make changes to our `auth.html`, for this we will only make changes to the elements/attributes in the `<form>....</form>`:
-
-```
-<form name="form" ng-submit="submit()" role="form">
-  <!-- only for register form -->
-  <div ng-show="showRegisterFields" class="form-group">
-    <input type="text" name="firstName" id="firstName" class="form-control" ng-model="firstName" placeholder="First Name" />
-  </div>
-
-  <div ng-show="showRegisterFields" class="form-group">
-    <input type="text" name="lastName" id="lastName" class="form-control" ng-model="lastName" placeholder="Last Name" />
-  </div>
-  <!-- only for register form -->
-
-  ...
-  ...
-  ...
-
-  <div class="text-center">
-    <button type="submit" ng-disabled="form.$invalid || dataLoading" class="btn btn-block send-button tx-tfm">{{formDetails.formBtnName}}</button>
-    <img
-      ng-if="dataLoading"
-      src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
-    />
-  </div>
-
-  <p class="small mt-3">{{formDetails.formMessage}} <a ng-href="{{formDetails.formLink}}" class="ps-hero__content__link">here</a></p>
-</form>
-```
+make sure you add the `type="module"` in the script link tag.
 
 ## Creating Service
 
 We will create a service to handle all our requests to the backend.
 
-First we create a directory called `services/` in out `app/` directory.
-Then we create our `authService.js` file in the `app/services/` directory with basic service code:
+First we create the follow folders called `services/` and `AuthenticationService/` in our `app/` directory.
+Then we create our `AuthenticationService.js` file in the `app/services/AuthenticationService/` directory with basic service code:
 
 ```
 ;(function () {
   angular.module('TodoApp').factory('AuthenticationService', [
     function () {
-      var service = {}
+      var AuthenticationService = {}
 
-      return service
+      return AuthenticationService
     }
   ])
 })()
 ```
 
-Next we link the service in out `index.html` below the link to our `app/app.js` file:
-
-```
-...
-<script src="app/app.js"></script>
-
-<!-- Services -->
-<script src="app/services/authService.js"></script>
-...
-```
-
-### Sample Login/Register Services
-
-#### Register Service
-
-In our auth service file, we inject the services we will be using, we do that with the follow code:
-
-```
-angular.module('TodoApp').factory('AuthenticationService', [
-    function () {
-      '$http',
-      '$cookieStore',
-      '$rootScope',
-      '$timeout',
-      function ($http, $cookieStore, $rootScope, $timeout) {
-        ....
-      }
-    }
-])
-```
-
-Then, we create a register function that we will export to use in our auth controller:
-
-```
-function ($http, $cookieStore, $rootScope, $timeout) {
-  var service = {}
-
-  // temp function
-  function getRandomItem(arr) {
-    let items = arr
-    let randomitem = Math.floor(Math.random() * items.length)
-    return items[randomitem]
-  }
-
-  service.Register = function (firstName, lastName, email, password, callback) {
-    // simulating a dummy server request
-    $timeout(function () {
-      var response = { success: getRandomItem([true, false]) }
-      if (!response.success) {
-        response.message = 'Failed to create user!'
-      }
-      callback(response)
-    }, 1000)
-  }
-
-  return service
-```
-
-#### Login Service
-
-Finally, In our Authentication Service we create our login function with the code below:
-
-```
-...
-
-service.Login = function (email, password, callback) {
-  // simulating a dummy server request
-  $timeout(function () {
-    var response = { success: email === 'testuser@tdd.com' && password === 'test' }
-    if (!response.success) {
-      response.message = 'Login failed, please check your username and password!'
-    }
-    callback(response)
-  }, 1000)
-}
-
-...
-```
-
-##### Auth Controller
-
-In our auth controller, we first inject our `AuthenticationService`:
-
-```
-angular.module('TodoApp').controller('AuthCtrl', [
-    '$scope',
-    '$location',
-    'AuthenticationService',
-    function ($scope, $location, AuthenticationService) {
-```
-
-Then, we create a function using the `$scope` service with the code below:
-
-```
-$scope.submit = function () {
-  $scope.dataLoading = true
-  if (!$scope.showRegisterFields) {
-    AuthenticationService.Login($scope.email, $scope.password, function (response) {
-      if (response.success) {
-        $location.path('/')
-      } else {
-        $scope.error = response.message
-        $scope.dataLoading = false
-      }
-    })
-  } else {
-    AuthenticationService.Register($scope.firstName, $scope.lastName, $scope.email, $scope.password, function (response) {
-      if (response.success) {
-        $location.path('/')
-      } else {
-        $scope.error = response.message
-        $scope.dataLoading = false
-      }
-    })
-  }
-}
-```
-
 ## Linking App To Backend
 
-In our `app.js` with add a `.constant()` that will contain the url address to our backend url, after the `.config()` method close we add the follow:
+In our `app.js` with add a `.run()` that will contain the url address to our backend url, after the `.component()` method close we add the follow:
 
 ```
-.config(/* some code is already here eg routes to /, /login, /register */)
-.constant('baseUrl', 'http://localhost:8000/api')
-```
+...
+.run([
+  '$rootScope',
+  function ($rootScope) {
+    $rootScope.backendUrl = 'http://localhost:8000/api'
 
-###### Changes to packages used in app
-
-I have made changes to the packages used, for the `CSS` imports I haved added `type="text/css"` attribute to fix a `mime` type error that kept showing up in the console.
-
-```
-- <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
-- <link rel="stylesheet" href="app.css" />
--
-- <base href="/" />
-+ <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.css" />
-+ <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.min.css" />
-+ <link rel="stylesheet" type="text/css" href="app.css" />
-```
-
-NB: Where `-` sign remove that code and where `+` sign add code.
-
-I've added 2 new Javascript packages:
-
-- This will help use Bootstraps navbar function for responsive mode
-- We will also use font awesome's icons for our buttons on our todo task list:
-
-Add these two link above the `app.js` link in our `index.html` file:
-
-```
-<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="https://kit.fontawesome.com/495c65d2de.js" crossorigin="anonymous"></script>
+    ...
 ```
 
 ## Setting Up Service For Backend Requests
 
-Firstly, we need in inject our constant, we do this in our `app/services/authService.js` file:
+Firstly, we need in inject our constant, we do this in our `app/services/AuthenticationService/AuthenticationService.js` file:
 
 ```
 ...
@@ -768,64 +446,25 @@ Firstly, we need in inject our constant, we do this in our `app/services/authSer
 '$timeout',
 'baseUrl',
 function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
-      var service = {}
+      var AuthenticationService = {}
 ...
 ```
 
-Then, we scrap all our functions in `app/services/authService.js` and create methods that is going to send a request to our `backend`.
-
-Our `app/services/authService.js` should look like this:
+Then, we scrap all our functions in `app/services/AuthenticationService/AuthenticationService.js` and create methods that is going to send a request to our `backend`.
 
 ```
-function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
-  var service = {}
-
-  service.Login = function (email, password, callback) {
-    var onSuccess = function (response, status, headers, config) {
-      if (status === 200) {
-        res.success = true
-        res.data = response
-      }
-      return callback(res)
-    }
-
-    var onError = function (response, status, headers, config) {
-      if (status === 401) {
-        res.message = response.error
-      } else {
-        res.error = 'Unable to find user, Please check if your email and password is entered correctly.'
-      }
-
-      return callback(res)
-    }
-
+  AuthenticationService.Login = function (user) {
     $http
-      .post(baseUrl + '/login', { email: email, password: password })
-      .success(onSuccess)
-      .error(onError)
-  }
-
-  service.Register = function (firstName, lastName, email, password, callback) {
-    var onSuccess = function (response, status, headers, config) {
-      console.log(response)
-    }
-
-    var onError = function (response, status, headers, config) {
-      console.log(response)
-    }
-
-    $http
-      .post(baseUrl + '/register', {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        password: password
+      .post(baseUrl + '/login', user)
+      .success(function() {
+        ...
       })
-      .success(onSuccess)
-      .error(onError)
+      .error(function() {
+        ...
+      })
   }
 
-  return service
+  ...
 }
 ```
 
@@ -833,41 +472,19 @@ function ($http, $cookieStore, $rootScope, $timeout, baseUrl) {
 
 We will be the way we are getting data from our view and handling the requestion in the controller, by doing the following:
 
-In `auth.html`:
+In `auth.html`,:
+add the `ng-submit` attribute
 
 ```
 <form name="form" ng-submit="submit()" role="form">
-  <!-- only for register form -->
-  <div ng-show="showRegisterFields" class="form-group">
-    <input type="text" name="firstName" id="firstName" class="form-control" ng-model="userFormDetails.firstName" placeholder="First Name" />
-  </div>
-  <div ng-show="showRegisterFields" class="form-group">
-    <input type="text" name="lastName" id="lastName" class="form-control" ng-model="userFormDetails.lastName" placeholder="Last Name" />
-  </div>
-  <!-- only for register form -->
 
-  <div class="form-group">
-    <input type="email" name="email" id="email" class="form-control" ng-model="userFormDetails.email" placeholder="Email" required />
-    <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Email is required</span>
-  </div>
-
-  <div class="form-group">
-    <input type="password" name="password" id="password" class="form-control" ng-model="userFormDetails.password" placeholder="Password" required />
-    <span ng-show="form.password.$dirty && form.password.$error.required" class="help-block">Password is required</span>
-  </div>
+  ...
 ```
 
 In `AuthCtrl.js`:
 
 ```
-AuthenticationService.Login($scope.userFormDetails, function (response) {
-  if (response.success) {
-    $location.path('/')
-  } else {
-    $scope.error = response.message
-    $scope.dataLoading = false
-  }
-})
+  AuthenticationService.Login($scope.userFormDetails)
 ```
 
 For the registeration process we will be doing a similar procedure to the login request.
@@ -875,67 +492,31 @@ For the registeration process we will be doing a similar procedure to the login 
 In `AuthCtrl.js`:
 
 ```
-AuthenticationService.Register($scope.userFormDetails, function (response) {
-  if (response.success) {
-    $location.path('/login')
-    $scope.success = response.message
-  } else {
-    $scope.error = response.message
-    $scope.dataLoading = false
-  }
-})
+AuthenticationService.Register($scope.userFormDetails)
 ```
 
 In `authService.js`:
 
 ```
-service.Register = function (data, callback) {
-  var res = {}
-  var onSuccess = function (response, status, headers, config) {
-    if (status === 200) {
-      res.success = true
-      res.message = 'User created successfully, please login.'
-    }
-    return callback(res)
+  AuthenticationService.Register = function (user) {
+    $http
+      .post(baseUrl + '/register', user)
+      .success(function() {
+        ...
+      })
+      .error(function() {
+        ...
+      })
   }
-
-  var onError = function (response, status, headers, config) {
-    if (status === 401) {
-      res.message = response.error
-    } else {
-      res.error = 'Unable to find user, Please check if your email and password is entered correctly.'
-    }
-
-    return callback(res)
-  }
-
-  $http
-    .post(baseUrl + '/register', {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      password: data.password
-    })
-    .success(onSuccess)
-    .error(onError)
-}
 ```
 
 ## Todo Components
 
 ### Todo Task List Component
 
-Firstly, we create our `todoTasks.html` file in the `views/` directory with code below:
+Firstly, we create our `todoTasks.html` file in the `app/routes/tasks/` directory with code below:
 
 ```
-<div class="text-center mt-md-5">
-  <h1>All todos</h1>
-</div>
-
-<div class="row">
-  <div class="col-md-12">
-    <a href="#/" class="btn btn-success btn-lg btn-block"><span class="fa fa-plus"></span> New Task</a>
-  </div>
 
   <div class="col-md-12 mt-md-2">
     <ul class="list-group">
@@ -952,36 +533,18 @@ Firstly, we create our `todoTasks.html` file in the `views/` directory with code
             </button>
           </span>
         </li>
-
-        <li class="list-group-item text-center">
-          <span class="float-left">
-            <button type="button" class="btn btn-success"><span class="fa fa-check"> </span></button>
-          </span>
-          <span>My second todo task</span>
-          <span class="float-right">
-            <a href="#/" class="btn btn-primary"><span class="fa fa-pencil"></span></a>
-            <button type="button" class="btn btn-danger">
-              <span class="fa fa-trash"> </span>
-            </button>
-          </span>
-        </li>
       </ul>
     </ul>
   </div>
-</div>
+
 ```
 
 ### Todo Form Component
 
-Finally, we create a new directory in `views/` called `shared/`, then we create our form file called `views/shared/todoTaskForm.html` with code below:
+Finally, we create our form file called `app/routes/tasks/todoTaskForm.html` with code below:
 
 ```
-<div class="text-center mt-md-5">
-  <h1>New Todo Task</h1>
-</div>
 
-<div class="row">
-  <div class="col-md-12">
     <form name="todoTaskForm">
       <div class="form-group">
         <input type="text" class="form-control" name="title" placeholder="Task Title" required />
@@ -994,8 +557,7 @@ Finally, we create a new directory in `views/` called `shared/`, then we create 
         <a href="#/" class="btn btn-default btn-lg btn-block"><span class="fa fa-remove"></span> Cancel</a>
       </div>
     </form>
-  </div>
-</div>
+
 ```
 
 ### Routing To Todo Components
@@ -1004,46 +566,22 @@ In the `app.js` add the following:
 
 ```
 ...
-.when('/tasks/new', {
-  controller: 'TaskCtrl',
-  templateUrl: 'views/shared/todoTaskForm.html'
-})
-.when('/tasks/edit/:id', {
-  controller: 'TaskCtrl',
-  templateUrl: 'views/shared/todoTaskForm.html'
-})
+{ path: '/tasks/...', component: 'tasks', name: 'Tasks' }
 ...
 ```
 
 ### Todo Task Controller
 
-In our `app/controllers/` directory we create our `TaskCtrl.js` file with the following code:
+In our `app/routes/tasks/` directory we create our `TaskCtrl.js` file with the following code:
 
 ```
-angular.module('TodoApp').controller('TaskCtrl', [
-  function () {
-    constructor()
-  '$scope',
-  '$routeParams',
-  function ($scope, $routeParams) {
-    /**
-      * changing heading on todo task form depending on $routeParams.id
-      * New todo tasks wont have an id as yet
-      */
-    $scope.formTitle = $routeParams.id ? 'Edit Task' : 'New Task'
-    $scope.taskDetails = {}
+;(function () {
+  angular
+    .module('app.tasks', [])
+    .component('tasks', {
 
-    function constructor() {
-      // any presets/checks goes here
-    $scope.handleTaskSave = function () {
-      console.log('handleTaskSave() method was clicked.')
-    }
+      ...
 
-    $scope.handleTaskDeletion = function () {
-      console.log('handleTaskDeletion() method was clicked.')
-    }
-  }
-])
 ```
 
 ### Todo Task Service
@@ -1055,41 +593,18 @@ In our app/services/ directory we create a service file to handle all our todo t
 ```
 ;(function () {
   angular.module('TodoApp').factory('TodoTaskService', [
-    '$http',
-    '$cookieStore',
-    '$rootScope',
-    '$timeout',
-    function ($http, $cookieStore, $rootScope, $timeout) {
-      var service = {}
+    function () {
+      var TodoTaskService = {}
 
-      service.todoTasks = [
-        {
-          id: 1,
-          title: 'Eating'
-        },
-        {
-          id: 2,
-          title: 'Code'
-        },
-        {
-          id: 3,
-          title: 'Sleep'
-        },
-        {
-          id: 4,
-          title: 'Repeat'
-        }
-      ]
+      TodoTaskService.FetchAllTodoTasks = function () {}
 
-      service.FetchAllTodoTasks = function () {}
+      TodoTaskService.SaveTodoTask = function (data) {}
 
-      service.SaveTodoTask = function (data) {}
+      TodoTaskService.UpdateTodoTask = function (data) {}
 
-      service.UpdateTodoTask = function (data) {}
+      TodoTaskService.DeleteTodoTask = function (data) {}
 
-      service.DeleteTodoTask = function (data) {}
-
-      return service
+      return TodoTaskService
     }
   ])
 })()
@@ -1098,252 +613,42 @@ In our app/services/ directory we create a service file to handle all our todo t
 Linking task service with controller:
 
 ```
+// app/routes/tasks/TaskCtrl.js
 ....
 'TodoTaskService',
-    function ($scope, $routeParams, TodoTaskService) {
+    function (TodoTaskService) {
       ....
 ```
 
-Importing file in our `index.html`:
+Importing file in our `dependencies.js`:
 
 ```
-<!-- Services -->
-<script src="app/services/authService.js"></script>
-<script src="app/services/taskService.js"></script>
+//  dist/dependencies.js
+
+  ...
+
+// Services
+import '../app/services/authenticationService/authenticationService.js'
+import '../app/services/taskService/taskService.js'
 ```
 
-## Route Handling
-
-### Authenticated and Anauthenicated Users
-
-In our `app/app.js` we are going to add a `.run()` function to handle the routes we want our users to go to depending on whether they have logged in or not.
-
-Above our `.constant()` function we add the code below:
-
-```
-.run([
-  '$rootScope',
-  '$location',
-  '$cookieStore',
-  '$http',
-  function ($rootScope, $location, $cookieStore, $http) {
-    $rootScope.$on('$locationChangeStart', function (event, next, current) {
-      /**
-        * ! For production
-        * make use of a authenticate method in the backend
-        */
-      var path = $location.path()
-      var userIsAuthenticated = localStorage.getItem('isAuthenticated') || false
-
-      switch (path) {
-        case '/':
-          if (!userIsAuthenticated) {
-            $location.path('/login')
-          }
-          break
-        case '/tasks/new':
-          if (!userIsAuthenticated) {
-            $location.path('/login')
-          }
-          break
-        case '/login':
-          if (userIsAuthenticated) {
-            $location.path('/')
-          }
-          break
-        case '/register':
-          if (userIsAuthenticated) {
-            $location.path('/')
-          }
-          break
-        default:
-          break
-      }
-    })
-  }
-])
-```
-
-## Creating Todo Task Directive
-
-We will be create a directive to help ask the user if they are sure that they was to delete the Todo Task.
-
-We create a new directory in `app/` called `directives/`, then we create our form file called `app/directives/confirmDeleteDirective.js` with code below:
-
-```
-;(function () {
-  angular.module('TodoApp').directive('ngConfirmClick', [
-    function () {
-      return {
-        link: function (scope, element, attr) {
-          var msg = attr.ngConfirmClick || 'Are you sure?'
-          var clickAction = attr.confirmedClick
-          element.bind('click', function (event) {
-            if (window.confirm(msg)) {
-              scope.$eval(clickAction)
-            }
-          })
-        }
-      }
-    }
-  ])
-})()
-```
-
-then import it in our `index.html`:
-
-```
-<script src="app/services/taskService.js"></script>
-
-<!-- Directives -->
-<script src="app/directives/confirmDeleteDirective.js"></script>
-
-<!-- Controllers -->
-<script src="app/controllers/TaskCtrl.js"></script>
-```
-
-## Creating Navbar Directive
+## Creating Navbar Component
 
 We create our form file called `app/directives/navbarDirective.js` with code below:
 
 ```
 ;(function () {
-  angular.module('TodoApp').directive('navbar', function () {
-    return {
-      restrict: 'E',
-      controller: 'ProfileCtrl',
-      templateUrl: 'views/shared/navbar.html'
-    }
-  })
+  ;(function () {
+  angular.module('app.navbar', []).component('navBar', {
+    template: '<nav class="navbar navbar-light bg-light">'+
+              '  <a class="navbar-brand" href="#">Navbar</a>'+
+              '</nav>',
+
+        ...
 })()
 ```
 
-then, we create the controller for the navbar:
-
-```
-// app/controllers/ProfileCtrl.js
-
-;(function () {
-  angular.module('TodoApp').controller('ProfileCtrl', [function () {}])
-})()
-```
-
-then, we create the view file and code for the navbar:
-
-```
-// views/shared/navbar.html
-
-<nav ng-if="showNavbar" class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#/tasks">Todo App</a>
-  <button
-    class="navbar-toggler"
-    type="button"
-    data-toggle="collapse"
-    data-target="#navbarNavDropdown"
-    aria-controls="navbarNavDropdown"
-    aria-expanded="false"
-    aria-label="Toggle navigation"
-  >
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav mr-auto"></ul>
-
-    <ul class="navbar-nav">
-      <li class="nav-item dropdown">
-        <a
-          style="cursor: pointer;"
-          class="nav-link dropdown-toggle"
-          id="navbarDropdownMenuLink"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          Settings
-        </>
-
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Profile</a>
-          <a class="dropdown-item" ng-click="handleLogout()">Logout</a>
-        </div>
-      </li>
-    </ul>
-  </div>
-</nav>
-```
-
-finally, we linking our navbar view, controller and directive to our index.html:
-
-```
-...
-
-</head>
-  <body>
-    <div ng-app="TodoApp">
-      <navbar></navbar>
-
-      <div class="container">
-        <div ng-view></div>
-      </div>
-...
-
-    <!-- Directives -->
-    <script src="app/directives/confirmDeleteDirective.js"></script>
-    <script src="app/directives/navbarDirective.js"></script>
-
-    <!-- Controllers -->
-    <script src="app/controllers/TaskCtrl.js"></script>
-    <script src="app/controllers/AuthCtrl.js"></script>
-    <script src="app/controllers/ProfileCtrl.js"></script>
-  </body>
-</html>
-```
-
-## Hiding Navigation Bar
-
-To hide our navbar from the login and register route we do the following in out `ProfileCtrl.js`:
-
-```
-;(function () {
-  angular.module('TodoApp').controller('ProfileCtrl', [
-    '$scope',
-    '$location',
-    function ($scope, $location) {
-      var path = $location.path()
-      if (path === '/login' || path === '/register') {
-        $scope.showNavbar = false
-      } else {
-        $scope.showNavbar = true
-      }
-
-      $scope.handleLogout = function () {
-        console.log('handleLogout() was clicked..')
-      }
-    }
-  ])
-})()
-```
-
-At this step our files and project structure goes as follows:
-
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/controllers/AuthCtrl.js">app/controllers/AuthCtrl.js</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/controllers/ProfileCtrl.js">app/controllers/ProfileCtrl.js</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/controllers/TaskCtrl.js">app/controllers/TaskCtrl.js</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/directives/confirmDeleteDirective.js">app/directives/confirmDeleteDirective.js</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/directives/navbarDirective.js">app/directives/navbarDirective.js</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/services/authService.js">app/services/authService.js</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/services/taskService.js">app/services/taskService.js</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app/app.js">app/app.js</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/views/shared/navbar.html">views/shared/navbar.html</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/views/shared/todoTaskForm.html">views/shared/todoTaskForm.html</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/views/auth.html">views/auth.html</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/views/todoTasks.html">views/todoTasks.html</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/views/userProfile.html">views/userProfile.html</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/index.html">index.html</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/package.json">package.json</a>
-- <a href="https://raw.githubusercontent.com/scriptjumper/angularjs-todo-app/master/app.css">app.css</a>
+For more template or how to create a `navbar` using `bootstrap` <a href="https://getbootstrap.com/docs/4.0/components/navbar/">go here</a>
 
 # Updating user Details
 
@@ -1352,93 +657,52 @@ Firstly, we create an update service method with the follow code:
 ```
 // app/service/authService.js
 ...
-service.UpdateCurrentUsersDetails = function (data, callback) {
-  var authentication = TodoTaskService.getAuthenticationHeaders(),
-    res = {}
+service.UpdateCurrentUsersDetails = function (data) {
+  $http.put($rootScope.backendUrl + '/user/update', user, )
+    .success(function (response, status) {
 
-  var req = {
-    method: 'PUT',
-    url: baseUrl + '/user/update',
-    headers: {
-      Authorization: `${authentication.token_type} ${authentication.access_token}`
-    },
-    data: {
-      id: data.id,
-      firstName: data.firstName,
-      lastName: data.lastName
-    }
-  }
+      ...
 
-  $http(req).then(
-    function (response) {
-      if (response.status === 200) {
-        res.success = true
-      }
+    })
+    .error(function (err) {
 
-      return callback(res)
-    },
-    function (response) {
-      callback(response)
-    }
-  )
-}
-...
-```
+      ...
 
-then we call our service in our controller:
-
-```
-// app/controllers/ProfileCtrl.js
-
-...
- $scope.handleUserUpdate = function () {
-  AuthenticationService.UpdateCurrentUsersDetails($scope.userDetails, function (response) {
-    if (response.success) {
-      getUserDetails()
-    } else {
-      $scope.error = response.message
-    }
-  })
+    })
 }
 ...
 ```
 
 ## Avatar Upload
 
-First we create a directive for the upload.
-In `app/directives/` we create a file `uploadFileDirective.js` and add the follow code to it:
+In `app/routes/profile/` we create a file `profileCtrl.js` and add the follow code to it:
 
 ```
-;(function () {
-  angular.module('TodoApp').directive('fileinput', [
-    function () {
-      return {
-        scope: {
-          fileinput: '=',
-          filepreview: '='
-        },
-        link: function (scope, element, attributes) {
-          element.bind('change', function (changeEvent) {
-            scope.fileinput = changeEvent.target.files[0]
-            var reader = new FileReader()
-            reader.onload = function (loadEvent) {
-              scope.$apply(function () {
-                scope.filepreview = loadEvent.target.result
-              })
-            }
-            reader.readAsDataURL(scope.fileinput)
-          })
-        }
-      }
+
+  ...
+
+  $ctrl.addImage = function () {
+    var f = document.getElementById('file').files[0],
+      r = new FileReader()
+    $ctrl.newAvatar = true
+    $rootScope.$apply()
+    r.onloadend = function (e) {
+      $ctrl.dataimg = 'data:image/jpeg;base64,' + btoa(e.target.result)
+      var img = document.getElementById('newAvatar')
+      img.src = $ctrl.dataimg
     }
-  ])
-})()
+    r.readAsBinaryString(f)
+  }
+
+  ...
+
 ```
 
-Then, add the link to the directive in our `index.html` under our other directives:
+Then, add the link to the directive in our `dist/dependencies.js` under our other directives:
 
 ```
-<script src="app/directives/uploadFileDirective.js"></script>
+// Routes
+import '../app/routes/profile/profileCtrl.js'
 ```
 
 We can now change our view to display our existing avatar image and also change our avatar.
@@ -1448,19 +712,18 @@ Add the code below at top of `userProfile.html`:
 ```
 <!-- views/userProfile.html -->
 
-<h1 class="mt-md-5">Avatar</h1>
-<hr />
+  ...
 
-<form>
+  <!-- show image -->
+
   <div class="row row-no-margin" style="margin-bottom: 1em;">
     <div class="col-xs-12 col-sm-12 col-no-padding" ng-show="filepreview == null">
       <img ng-src="{{userDetails.avatar}}" alt="" style="height: 200px; width: 200px;" class="thumbnail img-responsive rounded mx-auto d-block" />
     </div>
-
-    <div class="col-xs-12 col-sm-12 col-no-padding" ng-show="filepreview != null" style="margin-bottom: 1em;">
-      <img ng-src="{{filepreview}}" alt="" style="height: 200px; width: 200px;" class="thumbnail img-responsive rounded mx-auto d-block" />
-    </div>
   </div>
+
+
+  <!-- input type file for selecting file to upload as an avatar image -->
 
   <div class="custom-file" id="customFile" lang="es">
     <div class="col-md-12">
@@ -1471,33 +734,27 @@ Add the code below at top of `userProfile.html`:
     </div>
   </div>
 
-  <div class="row justify-content-center mt-md-3 mt-sm-3 mt-xs-3" ng-show="filepreview != null">
-    <button type="button" class="btn btn-warning mr-md-1 mr-sm-1 mr-xs-1" ng-click="cancelAvatarUpload()">Cancel Upload</button>
-    <button type="button" class="btn btn-success" ng-click="handleAvatarUpload()">Upload Image</button>
-  </div>
-</form>
-
-...
+  ...
 
 ```
 
-Then we add our scope variables in our `ProfileCtrl.js`:
+Then we add our functions to cancel upload and upload image in our `ProfileCtrl.js`:
 
 ```
 ...
 $scope.handleAvatarUpload = function () {
-  AuthenticationService.changeUserAvatar($scope.filepreview, function (response) {
-    if (response.success) {
-      $scope.filepreview = undefined
-      getUserDetails()
-    } else {
-      $scope.error = response.message
-    }
-  })
+  AuthenticationService.changeUserAvatar($scope.filepreview)
+  .then(
+    function(res) {
+      ...
+    },
+    function(err) {
+      ...
+    })
 }
 
 $scope.cancelAvatarUpload = function () {
-  $scope.filepreview = undefined
+  // clear all binding variable here to rest file input
 }
 ...
 ```
@@ -1505,34 +762,19 @@ $scope.cancelAvatarUpload = function () {
 Finally, we can create our request in our service file and change avatar images from our app:
 
 ```
-service.changeUserAvatar = function (data, callback) {
-    var authentication = service.getAuthenticationHeaders(),
-      user = JSON.parse(localStorage.getItem('currentUser'))
-    res = {}
+// app/service/authService.js
+  ...
 
-    var req = {
-      method: 'POST',
-      url: baseUrl + '/user/avatar/new',
-      headers: {
-        Authorization: `${authentication.token_type} ${authentication.access_token}`
-      },
-      data: {
-        id: user.id,
-        avatar: data
-      }
-    }
+  service.changeUserAvatar = function (data) {
+    $http
+      .post($rootScope.backendUrl + '/user/avatar/new', data)
+      .success(function (response, status) {
+        ...
+      })
+      .error(function (err) {
+        ...
+      })
+  }
 
-    $http(req).then(
-      function (response) {
-        if (response.status === 200) {
-          res.success = true
-        }
-
-        return callback(res)
-      },
-      function (response) {
-        callback(response)
-      }
-    )
-}
+  ...
 ```
