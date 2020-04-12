@@ -53,7 +53,7 @@ angular.module('app.404', []).component('notfound', {
     '  <p>Page not found</p>' +
     '  <div class="buttons-con">' +
     '    <div class="action-link-wrap">' +
-    '      <a href="#/tasks" class="link-button">Go back to tasks</a>' +
+    '      <a href="#/" class="link-button">Go back to tasks</a>' +
     '    </div>' +
     '  </div>' +
     '</div>'
