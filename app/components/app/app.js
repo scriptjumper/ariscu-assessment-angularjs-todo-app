@@ -38,6 +38,11 @@
                 $location.path(['/tasks'])
               }
               break
+            case '/tasks':
+              if (!userIsAuthenticated) {
+                $location.path(['/login'])
+              }
+              break
             case '/tasks/new':
               if (!userIsAuthenticated) {
                 $location.path(['/login'])
