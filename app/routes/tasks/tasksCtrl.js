@@ -33,7 +33,6 @@
         '               </span>' +
         `               <span ng-class="{'completed_task' : todoTask.isComplete === true}">{{todoTask.title}}</span>` +
         '               <span class="float-right">' +
-        // href="#/tasks/edit/{{todoTask.id}}"
         '               <a ng-link="[\'TaskDetail\', {id: todoTask.id}]" class="btn btn-primary"><span class="fa fa-pencil"></span></a>' +
         '               <button type="button" class="btn btn-danger" confirmed-click="$ctrl.handleTaskDeletion(todoTask.id)" ng-confirm-click="Are you sure you want to delete Task: {{todoTask.title}} ?">' +
         '               <span class="fa fa-trash"> </span>' +
@@ -58,12 +57,13 @@
         '</div>' +
         '<div class="row">' +
         '  <div class="col-md-12">' +
-        '    <form name="todoTaskForm">' +
+        '    <form name="form" role="form">' +
         '      <div class="form-group">' +
-        '        <input type="text" class="form-control" name="title" ng-model="$ctrl.taskDetails.title" placeholder="Task Title" required />' +
+        '        <input type="text" class="form-control" id="title" name="title" ng-model="$ctrl.taskDetails.title" placeholder="Title" required />' +
+        '        <span ng-show="form.title.$dirty && form.title.$error.required" class="help-block">Task title is required</span>' +
         '      </div>' +
         '      <div class="form-group">' +
-        '        <button type="button" class="btn btn-success btn-lg btn-block" ng-click="$ctrl.handleTaskSave()"><span class="fa fa-save"></span> Save</button>' +
+        '        <button type="button" class="btn btn-success btn-lg btn-block" ng-click="$ctrl.handleTaskSave()" ng-disabled="form.$invalid"><span class="fa fa-save"></span> Save</button>' +
         '      </div>' +
         '      <div class="form-group">' +
         '        <a href="#/tasks" class="btn btn-default btn-lg btn-block"><span class="fa fa-remove"></span> Cancel</a>' +
