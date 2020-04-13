@@ -19,26 +19,26 @@
         var defer = $q.defer(),
           res = {}
 
-        $http
-          .post($rootScope.backendUrl + '/login', user)
-          .success(function (response, status) {
-            if (status === 200) {
+        $http.post($rootScope.backendUrl + '/login', user).then(
+          function (response) {
+            if (response.status === 200) {
               res.success = true
-              res.data = response
+              res.data = response.data
               authenticationService.loggedIn = true
             }
 
             defer.resolve(res)
-          })
-          .error(function (err, status) {
-            if (status === 401) {
+          },
+          function (err) {
+            if (err.status === 401) {
               res.message = err.message
             } else {
               res.message = 'Unable to find user, Please check if your email and password is entered correctly.'
             }
 
             defer.reject(res)
-          })
+          }
+        )
 
         return defer.promise
       }
@@ -57,20 +57,19 @@
         var defer = $q.defer(),
           res = {}
 
-        $http
-          .post($rootScope.backendUrl + '/register', user)
-          .success(function (response, status) {
-            if (status === 200) {
+        $http.post($rootScope.backendUrl + '/register', user).then(
+          function (response) {
+            if (response.status === 200) {
               res.success = true
-              res.data = response
+              res.data = response.data
               authenticationService.loggedIn = true
             }
 
             defer.resolve(res)
-          })
-          .error(function (err, status) {
+          },
+          function (err) {
             // checking status and formatting error message to be displayed
-            switch (status) {
+            switch (err.status) {
               case 401:
                 res.message = err.message
                 break
@@ -85,7 +84,8 @@
             }
 
             defer.reject(res)
-          })
+          }
+        )
 
         return defer.promise
       }
@@ -107,19 +107,21 @@
               Authorization: `${authentication.token_type} ${authentication.access_token}`
             }
           })
-          .success(function (response, status) {
-            if (status === 200) {
-              res.success = true
-              res.data = response || []
+          .then(
+            function (response) {
+              if (response.status === 200) {
+                res.success = true
+                res.data = response.data || []
 
-              localStorage.setItem('currentUser', JSON.stringify(res.data))
+                localStorage.setItem('currentUser', JSON.stringify(res.data))
+              }
+
+              defer.resolve(res)
+            },
+            function (err) {
+              defer.reject(err)
             }
-
-            defer.resolve(res)
-          })
-          .error(function (err) {
-            defer.reject(err)
-          })
+          )
 
         return defer.promise
       }
@@ -141,17 +143,19 @@
               Authorization: `${authentication.token_type} ${authentication.access_token}`
             }
           })
-          .success(function (response, status) {
-            if (status === 200) {
-              res.success = true
-              res.message = response.message
-            }
+          .then(
+            function (response) {
+              if (response.status === 200) {
+                res.success = true
+                res.message = response.data.message
+              }
 
-            defer.resolve(res)
-          })
-          .error(function (err) {
-            defer.reject(err)
-          })
+              defer.resolve(res)
+            },
+            function (err) {
+              defer.reject(err)
+            }
+          )
 
         return defer.promise
       }
@@ -175,16 +179,18 @@
               }
             }
           )
-          .success(function (response, status) {
-            if (status === 200) {
-              res.success = true
-            }
+          .then(
+            function (response) {
+              if (response.status === 200) {
+                res.success = true
+              }
 
-            defer.resolve(res)
-          })
-          .error(function (err) {
-            defer.reject(err)
-          })
+              defer.resolve(res)
+            },
+            function (err) {
+              defer.reject(err)
+            }
+          )
 
         return defer.promise
       }
