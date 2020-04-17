@@ -1,6 +1,9 @@
 ;(function () {
   angular
     .module('TodoApp', ['ngComponentRouter', 'ngRoute', 'app.navbar', 'app.login', 'app.register', 'app.profile', 'app.tasks', 'app.404'])
+    .config(function ($locationProvider) {
+      $locationProvider.html5Mode(true)
+    })
     .value('$routerRootComponent', 'app')
     .component('app', {
       template: '<nav-bar></nav-bar><main class="container"><ng-outlet></ng-outlet></main>',

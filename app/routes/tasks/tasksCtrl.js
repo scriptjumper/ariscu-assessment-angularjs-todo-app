@@ -16,7 +16,7 @@
         '</div>' +
         '<div class="row">' +
         '   <div class="col-md-12">' +
-        '      <a href="#/tasks/new" class="btn btn-success btn-lg btn-block"><span class="fa fa-plus"></span> New Task</a>' +
+        '      <a href="/tasks/new" class="btn btn-success btn-lg btn-block"><span class="fa fa-plus"></span> New Task</a>' +
         '   </div>' +
         '   <div ng-if="$ctrl.todoTasks.length > 0" class="mb-3 mt-3 btn-lg col-md-12">' +
         '      <input class="form-control" type="text" placeholder="Search To do Task" aria-label="Search" ng-model="$ctrl.query" />' +
@@ -66,7 +66,7 @@
         '        <button type="button" class="btn btn-success btn-lg btn-block" ng-click="$ctrl.handleTaskSave()" ng-disabled="form.$invalid"><span class="fa fa-save"></span> Save</button>' +
         '      </div>' +
         '      <div class="form-group">' +
-        '        <a href="#/tasks" class="btn btn-default btn-lg btn-block"><span class="fa fa-remove"></span> Cancel</a>' +
+        '        <a href="/tasks" class="btn btn-default btn-lg btn-block"><span class="fa fa-remove"></span> Cancel</a>' +
         '      </div>' +
         '    </form>' +
         '  </div>' +

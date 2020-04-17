@@ -23,16 +23,18 @@
               Authorization: `${authentication.token_type} ${authentication.access_token}`
             }
           })
-          .success(function (response, status) {
-            if (status === 201) {
-              res.success = true
-            }
+          .then(
+            function (response) {
+              if (response.status === 201) {
+                res.success = true
+              }
 
-            defer.resolve(res)
-          })
-          .error(function (err) {
-            defer.reject(err)
-          })
+              defer.resolve(res)
+            },
+            function (err) {
+              defer.reject(err)
+            }
+          )
 
         return defer.promise
       }
@@ -57,18 +59,20 @@
               Authorization: `${authentication.token_type} ${authentication.access_token}`
             }
           })
-          .success(function (response, status) {
-            if (status === 200) {
-              res.success = true
+          .then(
+            function (response) {
+              if (response.status === 200) {
+                res.success = true
+              }
+
+              defer.resolve(res)
+            },
+            function (err) {
+              if (err.message.includes('No query results for model')) res.message = 'Oops, failed to update task.'
+
+              defer.reject(res)
             }
-
-            defer.resolve(res)
-          })
-          .error(function (err) {
-            if (err.message.includes('No query results for model')) res.message = 'Oops, failed to update task.'
-
-            defer.reject(res)
-          })
+          )
 
         return defer.promise
       }
@@ -90,16 +94,18 @@
               Authorization: `${authentication.token_type} ${authentication.access_token}`
             }
           })
-          .success(function (response, status) {
-            if (status === 204) {
-              res.success = true
-            }
+          .then(
+            function (response) {
+              if (response.status === 204) {
+                res.success = true
+              }
 
-            defer.resolve(res)
-          })
-          .error(function (err) {
-            defer.reject(err)
-          })
+              defer.resolve(res)
+            },
+            function (err) {
+              defer.reject(err)
+            }
+          )
 
         return defer.promise
       }
@@ -122,18 +128,20 @@
               Authorization: `${authentication.token_type} ${authentication.access_token}`
             }
           })
-          .success(function (response, status) {
-            if (status === 200) {
-              res.success = true
-              res.data = response.data || []
-            }
+          .then(
+            function (response) {
+              if (response.status === 200) {
+                res.success = true
+                res.data = response.data.data || []
+              }
 
-            sessionStorage.setItem('todoTasks', JSON.stringify(res.data))
-            defer.resolve(res)
-          })
-          .error(function (err) {
-            defer.reject(err)
-          })
+              sessionStorage.setItem('todoTasks', JSON.stringify(res.data))
+              defer.resolve(res)
+            },
+            function (err) {
+              defer.reject(err)
+            }
+          )
 
         return defer.promise
       }
