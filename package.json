@@ -19,7 +19,7 @@
   "homepage": "https://github.com/scriptjumper/angularjs-todo-app#readme",
   "dependencies": {
     "@angular/router": "^0.2.0",
-    "angular": "^1.7.9",
+    "angular": "^1.8.3",
     "angular-cookies": "^1.7.9",
     "angular-font-awesome": "^3.1.2",
     "angular-resource": "^1.7.9",
