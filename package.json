@@ -31,6 +31,6 @@
   },
   "devDependencies": {
     "lite-server": "^2.5.4",
-    "minimist": ">=1.2.3"
+    "minimist": ">=1.2.6"
   }
 }
